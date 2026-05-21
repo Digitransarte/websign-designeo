@@ -1,0 +1,24 @@
+# Dados de clientes (contém credenciais)
+clients.json
+
+# Logs
+*.log
+
+# Ambiente Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code (configuração local)
+.claude/settings.local.json

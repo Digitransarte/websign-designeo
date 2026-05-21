@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Designeo Studio</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff; --bg2: #f7f6f3; --bg3: #f0efe9;
+  --text: #1a1a18; --text2: #6b6b67; --text3: #9b9b96;
+  --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.18);
+  --accent: #1a1a18; --accent-bg: #f0efe9;
+  --green: #2d6a4f; --green-bg: #d8f3dc;
+  --red: #c1121f; --red-bg: #ffe5e5;
+  --blue: #185fa5; --blue-bg: #e6f1fb;
+  --amber: #854f0b; --amber-bg: #faeeda;
+  --radius: 8px; --radius-lg: 12px;
+  --sidebar: 220px;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; height: 100vh; overflow: hidden; }
+
+/* Layout */
+#app { display: flex; height: 100vh; }
+.sidebar { width: var(--sidebar); background: var(--bg2); border-right: 0.5px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.main { flex: 1; overflow-y: auto; }
+
+/* Sidebar */
+.sb-header { padding: 16px 14px 12px; border-bottom: 0.5px solid var(--border); }
+.sb-logo { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); margin-bottom: 2px; }
+.sb-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.sb-section { padding: 10px 14px 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); }
+.sb-client { padding: 8px 14px; font-size: 13px; cursor: pointer; color: var(--text2); border-left: 2px solid transparent; display: flex; align-items: center; gap: 8px; }
+.sb-client:hover { background: var(--bg3); color: var(--text); }
+.sb-client.active { color: var(--text); background: var(--bg3); border-left-color: var(--accent); font-weight: 500; }
+.sb-client .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
+.sb-client.active .dot { background: var(--accent); }
+.sb-add { margin: 10px 14px; padding: 7px 12px; font-size: 12px; font-weight: 500; border: 0.5px dashed var(--border2); border-radius: var(--radius); background: none; color: var(--text2); cursor: pointer; text-align: left; width: calc(100% - 28px); }
+.sb-add:hover { background: var(--bg3); color: var(--text); border-style: solid; }
+.sb-footer { margin-top: auto; padding: 12px 14px; border-top: 0.5px solid var(--border); }
+.api-key-input { width: 100%; padding: 6px 8px; font-size: 11px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); font-family: monospace; }
+.api-key-label { font-size: 10px; color: var(--text3); margin-bottom: 4px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Main content */
+.main-inner { max-width: 860px; padding: 2rem 2rem 4rem; }
+
+/* Welcome */
+.welcome { padding: 4rem 2rem; text-align: center; }
+.welcome h1 { font-size: 26px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.welcome p { color: var(--text2); font-size: 14px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 0.5px solid var(--border); margin-bottom: 2rem; }
+.tab { padding: 10px 16px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text2); border-bottom: 2px solid transparent; margin-bottom: -0.5px; background: none; border-top: none; border-left: none; border-right: none; }
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--accent); }
+.tab .badge { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); margin-left: 6px; vertical-align: middle; }
+
+/* Client header */
+.client-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+.client-name { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.client-meta { font-size: 13px; color: var(--text2); }
+.btn-danger { padding: 6px 12px; font-size: 12px; border: 0.5px solid var(--red); border-radius: var(--radius); background: none; color: var(--red); cursor: pointer; }
+.btn-danger:hover { background: var(--red-bg); }
+
+/* Form elements */
+.field { margin-bottom: 1.1rem; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.06em; }
+.field input, .field textarea, .field select { width: 100%; padding: 8px 10px; font-size: 13px; font-family: inherit; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text); }
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+.field .hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.tom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px; }
+.tom-opt { padding: 7px 10px; font-size: 12px; border: 0.5px solid var(--border); border-radius: var(--radius); cursor: pointer; background: var(--bg); color: var(--text2); text-align: left; font-family: inherit; }
+.tom-opt:hover { border-color: var(--border2); color: var(--text); }
+.tom-opt.sel { border-color: var(--accent); color: var(--text); background: var(--accent-bg); font-weight: 500; }
+
+/* Buttons */
+.btn { padding: 8px 18px; font-size: 13px; font-weight: 500; font-family: inherit; border-radius: var(--radius); cursor: pointer; border: 0.5px solid var(--border2); background: var(--bg); color: var(--text); transition: all 0.12s; }
+.btn:hover { background: var(--bg3); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.btn-primary:hover { opacity: 0.85; background: var(--accent); }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.btn-success { border-color: var(--green); color: var(--green); }
+.btn-success:hover { background: var(--green-bg); }
+
+/* Section label */
+.sec-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 0.5px solid var(--border); }
+
+/* Cards */
+.card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.card-surface { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+
+/* Plan viewer */
+.plan-layout { display: grid; grid-template-columns: 190px 1fr; gap: 1.5rem; align-items: start; }
+.plan-nav { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; position: sticky; top: 0; }
+.pn-header { padding: 9px 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); background: var(--bg2); border-bottom: 0.5px solid var(--border); }
+.pn-item { padding: 9px 12px; font-size: 12px; cursor: pointer; color: var(--text2); border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 7px; background: var(--bg); }
+.pn-item:last-child { border-bottom: none; }
+.pn-item:hover { background: var(--bg2); color: var(--text); }
+.pn-item.active { color: var(--text); background: var(--bg2); font-weight: 500; }
+.pn-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
+.pn-item.active .pn-dot { background: var(--accent); }
+.pn-status { margin-left: auto; font-size: 10px; padding: 2px 6px; border-radius: 100px; }
+.pn-status.done { background: var(--green-bg); color: var(--green); }
+.pn-status.draft { background: var(--amber-bg); color: var(--amber); }
+
+/* Page detail */
+.pd-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.pd-desc { font-size: 12px; color: var(--text2); margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--border); line-height: 1.5; }
+.block-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+.copy-headline { font-size: 16px; font-weight: 600; margin-bottom: 3px; }
+.copy-tagline { font-size: 12px; color: var(--text2); font-style: italic; margin-bottom: 8px; }
+.copy-intro { font-size: 13px; line-height: 1.65; color: var(--text); }
+.secoes-list { display: flex; flex-direction: column; gap: 5px; }
+.secao-item { padding: 8px 10px; background: var(--bg2); border-radius: var(--radius); }
+.secao-nome { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+.secao-desc { font-size: 11px; color: var(--text2); line-height: 1.4; }
+.seo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seo-f { padding: 8px 10px; background: var(--bg2); border-radius: var(--radius); }
+.seo-l { font-size: 10px; color: var(--text3); margin-bottom: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.seo-v { font-size: 12px; line-height: 1.4; }
+.seo-c { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.seo-c.warn { color: var(--amber); }
+.ctas-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.cta-pill { padding: 4px 12px; border: 0.5px solid var(--border2); border-radius: 100px; font-size: 11px; color: var(--text); background: var(--bg2); }
+
+/* Content tab */
+.content-page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.content-sec { margin-bottom: 1.25rem; }
+.content-sec-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.content-body { font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; }
+.content-list { margin: 6px 0 6px 16px; }
+.content-list li { font-size: 13px; color: var(--text); margin-bottom: 3px; }
+.notas-wp { font-size: 12px; color: var(--text2); background: var(--amber-bg); border-left: 3px solid var(--amber); padding: 10px 12px; border-radius: 0 var(--radius) var(--radius) 0; line-height: 1.5; margin-top: 1rem; }
+.type-badge { font-size: 10px; padding: 2px 8px; border-radius: 100px; background: var(--blue-bg); color: var(--blue); font-weight: 500; }
+
+/* WordPress tab */
+.wp-status { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius); margin-bottom: 1rem; font-size: 13px; }
+.wp-status.ok { background: var(--green-bg); color: var(--green); }
+.wp-status.error { background: var(--red-bg); color: var(--red); }
+.push-table { width: 100%; border-collapse: collapse; }
+.push-table th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); padding: 6px 10px; border-bottom: 0.5px solid var(--border); }
+.push-table td { padding: 8px 10px; font-size: 12px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.push-table tr:last-child td { border-bottom: none; }
+.push-result { font-size: 11px; }
+.push-result.ok { color: var(--green); }
+.push-result.err { color: var(--red); }
+
+/* Spinner */
+.spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Alerts */
+.alert { padding: 10px 14px; border-radius: var(--radius); font-size: 12px; margin-bottom: 1rem; line-height: 1.5; }
+.alert-info { background: var(--blue-bg); color: var(--blue); }
+.alert-success { background: var(--green-bg); color: var(--green); }
+.alert-error { background: var(--red-bg); color: var(--red); }
+.alert-warn { background: var(--amber-bg); color: var(--amber); }
+
+/* Resumo card */
+.resumo-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.resumo-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+/* New client modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal { background: var(--bg); border-radius: var(--radius-lg); padding: 1.5rem; width: 500px; max-width: 95vw; max-height: 90vh; overflow-y: auto; border: 0.5px solid var(--border2); }
+.modal-title { font-size: 17px; font-weight: 600; margin-bottom: 1.5rem; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+
+@media (max-width: 700px) {
+  .plan-layout, .seo-grid, .grid2 { grid-template-columns: 1fr; }
+  .tom-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Compositor ───────────────────────────────────────────────────────────── */
+.comp-layout { display: grid; grid-template-columns: 220px 1fr 240px; gap: 1.25rem; align-items: start; min-height: 600px; }
+.comp-panel { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg); }
+.comp-panel-header { padding: 10px 12px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); background: var(--bg2); border-bottom: 0.5px solid var(--border); }
+
+/* Section library cards */
+.sec-lib { display: flex; flex-direction: column; gap: 0; }
+.sec-lib-item { padding: 10px 12px; cursor: pointer; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--bg); transition: background 0.12s; }
+.sec-lib-item:last-child { border-bottom: none; }
+.sec-lib-item:hover { background: var(--bg2); }
+.sec-lib-item:hover .sec-lib-add { opacity: 1; }
+.sec-lib-thumb { width: 44px; height: 32px; border-radius: 3px; background: var(--bg2); border: 0.5px solid var(--border); flex-shrink: 0; overflow: hidden; position: relative; }
+.sec-lib-info { flex: 1; min-width: 0; }
+.sec-lib-name { font-size: 12px; font-weight: 500; color: var(--text); }
+.sec-lib-desc { font-size: 10px; color: var(--text3); }
+.sec-lib-add { font-size: 16px; color: var(--text3); opacity: 0; transition: opacity 0.12s; flex-shrink: 0; }
+
+/* Wireframe thumbnails */
+.thumb-hero { padding: 4px 5px; }
+.thumb-hero .th-line { height: 3px; background: var(--text); border-radius: 1px; margin-bottom: 2px; }
+.thumb-hero .th-line.sm { width: 60%; height: 2px; background: var(--text3); }
+.thumb-hero .th-btn { display: inline-block; width: 18px; height: 4px; background: var(--text); border-radius: 1px; margin-top: 3px; margin-right: 2px; }
+
+.thumb-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 4px 5px; height: 100%; }
+.thumb-2col .th-col { background: var(--border); border-radius: 1px; }
+
+.thumb-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; padding: 4px 5px; height: 100%; align-items: end; }
+.thumb-3col .th-col { background: var(--border); border-radius: 1px; }
+
+.thumb-cta { background: var(--text); display: flex; align-items: center; justify-content: center; height: 100%; }
+.thumb-cta .th-dot { width: 20px; height: 3px; background: rgba(255,255,255,0.6); border-radius: 1px; }
+
+.thumb-lines { padding: 5px; display: flex; flex-direction: column; gap: 2px; justify-content: center; }
+.thumb-lines .th-l { height: 2px; background: var(--border2); border-radius: 1px; }
+.thumb-lines .th-l.full { width: 100%; }
+.thumb-lines .th-l.med { width: 75%; }
+.thumb-lines .th-l.sm { width: 50%; }
+
+/* Canvas */
+.canvas-empty { padding: 2rem; text-align: center; color: var(--text3); font-size: 13px; border: 1.5px dashed var(--border); border-radius: var(--radius); margin: 1rem; }
+.canvas-section { margin: 0; border-bottom: 0.5px solid var(--border); }
+.canvas-section:last-child { border-bottom: none; }
+.canvas-sec-header { padding: 10px 12px; display: flex; align-items: center; gap: 8px; background: var(--bg); }
+.canvas-sec-header:hover { background: var(--bg2); }
+.canvas-sec-thumb { width: 36px; height: 26px; border-radius: 3px; background: var(--bg2); border: 0.5px solid var(--border); flex-shrink: 0; overflow: hidden; position: relative; }
+.canvas-sec-info { flex: 1; min-width: 0; }
+.canvas-sec-type { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
+.canvas-sec-name { font-size: 12px; color: var(--text); font-weight: 500; }
+.canvas-sec-actions { display: flex; gap: 2px; flex-shrink: 0; }
+.canvas-btn { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: none; background: none; cursor: pointer; color: var(--text3); font-size: 12px; border-radius: 3px; }
+.canvas-btn:hover { background: var(--bg3); color: var(--text); }
+.canvas-btn.danger:hover { background: var(--red-bg); color: var(--red); }
+.canvas-sec-content { padding: 0 12px 10px 58px; font-size: 11px; color: var(--text2); line-height: 1.5; font-style: italic; }
+
+/* Page selector in composer */
+.page-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+.page-pill { padding: 5px 12px; font-size: 12px; font-weight: 500; border: 0.5px solid var(--border2); border-radius: 100px; cursor: pointer; background: var(--bg); color: var(--text2); }
+.page-pill:hover { background: var(--bg2); color: var(--text); }
+.page-pill.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* Design system panel */
+.ds-section { padding: 12px; border-bottom: 0.5px solid var(--border); }
+.ds-section:last-child { border-bottom: none; }
+.ds-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+.palette-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.palette-opt { padding: 6px 8px; border-radius: var(--radius); cursor: pointer; border: 1.5px solid transparent; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; }
+.palette-opt.sel { border-color: var(--accent); }
+.palette-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.font-opt { padding: 7px 10px; border-radius: var(--radius); cursor: pointer; border: 1.5px solid var(--border); margin-bottom: 4px; }
+.font-opt:last-child { margin-bottom: 0; }
+.font-opt.sel { border-color: var(--accent); background: var(--accent-bg); }
+.font-opt-display { font-size: 13px; font-weight: 600; color: var(--text); }
+.font-opt-body { font-size: 10px; color: var(--text3); }
+.ds-push-btn { width: 100%; padding: 8px; font-size: 11px; font-weight: 500; font-family: inherit; border: 0.5px solid var(--border2); border-radius: var(--radius); cursor: pointer; background: var(--bg); color: var(--text2); margin-top: 8px; }
+.ds-push-btn:hover { background: var(--bg3); color: var(--text); }
+.ds-push-btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.ds-push-btn.primary:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+const { useState, useEffect, useCallback } = React;
+const h = React.createElement;
+const API = "http://localhost:5050";
+
+const TOM = ["Profissional e confiante","Amigável e acessível","Criativo e dinâmico","Luxo e premium","Técnico e especializado","Informal e descontraído"];
+const TIPO = ["Restaurante / Café","Saúde e bem-estar","Serviços profissionais","Loja / Comércio local","Imobiliária","Turismo / Alojamento","Educação / Formação","Yoga / Movimento / Terapias","Outro"];
+
+// ── utils ────────────────────────────────────────────────────────────────────
+
+async function apiFetch(path, opts = {}) {
+  const apiKey = (localStorage.getItem("ds_api_key") || "").trim();
+  try {
+    const res = await fetch(API + path, {
+      headers: { "Content-Type": "application/json", "X-Api-Key": apiKey },
+      ...opts,
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    });
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch(e) {
+      // Flask returned HTML (500 error) — extract useful info
+      const match = text.match(/<pre[^>]*>([\s\S]*?)<\/pre>/);
+      const detail = match ? match[1].slice(0, 200) : text.slice(0, 200);
+      return { error: `Erro do servidor: ${detail}` };
+    }
+  } catch(e) {
+    return { error: `Sem ligação ao Studio (localhost:5050). Verifica se o app.py está a correr.` };
+  }
+}
+
+// ── Briefing form ─────────────────────────────────────────────────────────────
+
+function BriefingTab({ client, onSave }) {
+  const [form, setForm] = useState(client.briefing || {
+    nomeCliente: client.nomeCliente || "", nomeNegocio: client.nomeNegocio || "",
+    tipoNegocio: "", tipoCustom: "", localizacao: "", publicoAlvo: "",
+    propostaValor: "", tomVoz: "", paginasPedidas: "", funcionalidades: "", referencias: ""
+  });
+  const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [msg, setMsg] = useState(null);
+
+  // Sync form when client changes
+  useEffect(() => {
+    setForm(client.briefing || {
+      nomeCliente: client.nomeCliente || "", nomeNegocio: client.nomeNegocio || "",
+      tipoNegocio: "", tipoCustom: "", localizacao: "", publicoAlvo: "",
+      propostaValor: "", tomVoz: "", paginasPedidas: "", funcionalidades: "", referencias: ""
+    });
+    setMsg(null);
+  }, [client.id]);
+
+  const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const save = async () => {
+    setSaving(true);
+    await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, briefing: form, nomeNegocio: form.nomeNegocio, nomeCliente: form.nomeCliente } });
+    setSaving(false);
+    setMsg({ type: "success", text: "Briefing guardado." });
+    onSave();
+    setTimeout(() => setMsg(null), 2500);
+  };
+
+  const generatePlan = async () => {
+    const apiKey = (localStorage.getItem("ds_api_key") || "").trim();
+    if (!apiKey || !apiKey.startsWith("sk-ant-")) {
+      setMsg({ type: "error", text: "API key inválida. Deve começar por sk-ant-... — verifica na barra lateral." });
+      return;
+    }
+    setGenerating(true);
+    setMsg(null);
+    try {
+      const plan = await apiFetch("/api/generate/plan", { method: "POST", body: form });
+      if (plan.error) throw new Error(plan.error);
+      await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, briefing: form, plan, nomeNegocio: form.nomeNegocio, nomeCliente: form.nomeCliente } });
+      setMsg({ type: "success", text: "Plano gerado! Vai ao separador Plano para ver." });
+      onSave();
+    } catch(e) {
+      setMsg({ type: "error", text: e.message });
+    }
+    setGenerating(false);
+  };
+
+  const F = (label, key, type = "input", hint = "") =>
+    h("div", { className: "field" },
+      h("label", null, label),
+      hint && h("div", { className: "hint" }, hint),
+      type === "textarea"
+        ? h("textarea", { value: form[key] || "", onChange: e => upd(key, e.target.value) })
+        : h("input", { value: form[key] || "", onChange: e => upd(key, e.target.value) })
+    );
+
+  return h("div", null,
+    h("div", { className: "sec-label" }, "Briefing do cliente"),
+    msg && h("div", { className: `alert alert-${msg.type}` }, msg.text),
+    h("div", { className: "grid2" },
+      F("Nome do cliente", "nomeCliente"),
+      F("Nome do negócio", "nomeNegocio")
+    ),
+    h("div", { className: "field" },
+      h("label", null, "Tipo de negócio"),
+      h("select", { value: form.tipoNegocio || "", onChange: e => upd("tipoNegocio", e.target.value) },
+        h("option", { value: "" }, "Selecionar..."),
+        ...TIPO.map(t => h("option", { key: t, value: t }, t))
+      )
+    ),
+    form.tipoNegocio === "Outro" && F("Especifica o tipo", "tipoCustom"),
+    F("Localização", "localizacao"),
+    F("Público-alvo", "publicoAlvo", "textarea", "Quem são os clientes ideais?"),
+    F("Proposta de valor", "propostaValor", "textarea", "O que torna este negócio único?"),
+    h("div", { className: "field" },
+      h("label", null, "Tom de voz"),
+      h("div", { className: "tom-grid" },
+        ...TOM.map(t => h("button", { key: t, className: "tom-opt" + (form.tomVoz === t ? " sel" : ""), onClick: () => upd("tomVoz", t) }, t))
+      )
+    ),
+    F("Páginas pedidas", "paginasPedidas", "textarea", "Opcional — deixa em branco para sugestão automática"),
+    F("Funcionalidades especiais", "funcionalidades", "textarea", "Loja, reservas, galeria, newsletter..."),
+    F("Referências", "referencias", "input"),
+    h("div", { style: { display: "flex", gap: "10px", marginTop: "1.5rem" } },
+      h("button", { className: "btn btn-primary", onClick: generatePlan, disabled: generating || !form.nomeNegocio },
+        generating ? h("span", null, h("span", { className: "spinner" }), " A gerar...") : "Gerar plano →"
+      ),
+      h("button", { className: "btn", onClick: save, disabled: saving }, saving ? "A guardar..." : "Guardar briefing")
+    )
+  );
+}
+
+// ── Plan viewer ───────────────────────────────────────────────────────────────
+
+function PlanTab({ client, onSave }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const plan = client.plan;
+  if (!plan) return h("div", { className: "alert alert-info" }, "Ainda não foi gerado nenhum plano. Vai ao separador Briefing e clica em 'Gerar plano'.");
+  const pg = plan.paginas?.[activeIdx];
+  const content = client.pages_content || {};
+
+  return h("div", null,
+    h("div", { className: "resumo-card" },
+      h("div", { className: "block-label" }, "Resumo estratégico"),
+      h("div", { className: "resumo-text" }, plan.resumo)
+    ),
+    h("div", { className: "plan-layout" },
+      h("div", { className: "plan-nav" },
+        h("div", { className: "pn-header" }, "Páginas"),
+        ...(plan.paginas || []).map((p, i) =>
+          h("div", { key: p.id, className: "pn-item" + (activeIdx === i ? " active" : ""), onClick: () => setActiveIdx(i) },
+            h("div", { className: "pn-dot" }),
+            h("span", { style: { flex: 1 } }, p.nome),
+            content[p.id] ? h("span", { className: "pn-status done" }, "✓") : h("span", { className: "pn-status draft" }, "—")
+          )
+        )
+      ),
+      pg && h("div", null,
+        h("div", { className: "pd-title" }, pg.nome),
+        h("div", { className: "pd-desc" }, pg.descricao),
+        h("div", { className: "card" },
+          h("div", { className: "block-label" }, "Copy de arranque"),
+          h("div", { className: "copy-headline" }, pg.copy?.headline),
+          h("div", { className: "copy-tagline" }, pg.copy?.tagline),
+          h("div", { className: "copy-intro" }, pg.copy?.intro)
+        ),
+        h("div", { className: "card" },
+          h("div", { className: "block-label" }, "Secções"),
+          h("div", { className: "secoes-list" },
+            ...(pg.secoes || []).map((s, i) =>
+              h("div", { key: i, className: "secao-item" },
+                h("div", { className: "secao-nome" }, s.nome),
+                h("div", { className: "secao-desc" }, s.descricao)
+              )
+            )
+          )
+        ),
+        h("div", { className: "card" },
+          h("div", { className: "block-label" }, "SEO"),
+          h("div", { className: "seo-grid" },
+            ...[["Meta title", pg.seo?.title, 60], ["Meta description", pg.seo?.description, 155]].map(([lbl, val, max]) =>
+              h("div", { key: lbl, className: "seo-f" },
+                h("div", { className: "seo-l" }, lbl),
+                h("div", { className: "seo-v" }, val),
+                h("div", { className: "seo-c" + ((val || "").length > max ? " warn" : "") }, (val || "").length + " chars" + ((val || "").length > max ? " ⚠ excede " + max : ""))
+              )
+            )
+          )
+        ),
+        h("div", { className: "card" },
+          h("div", { className: "block-label" }, "Calls to action"),
+          h("div", { className: "ctas-row" }, ...(pg.ctas || []).map((c, i) => h("div", { key: i, className: "cta-pill" }, c)))
+        )
+      )
+    )
+  );
+}
+
+// ── Content generator ─────────────────────────────────────────────────────────
+
+function ContentTab({ client, onSave }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [generating, setGenerating] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const plan = client.plan;
+
+  if (!plan) return h("div", { className: "alert alert-info" }, "Gera primeiro o plano no separador Briefing.");
+
+  const pages = plan.paginas || [];
+  const content = client.pages_content || {};
+  const pg = pages[activeIdx];
+
+  const generate = async (pageIdx) => {
+    const apiKey = localStorage.getItem("ds_api_key") || "";
+    if (!apiKey) { setMsg({ type: "error", text: "Introduz a API key na barra lateral." }); return; }
+    setGenerating(pageIdx);
+    setMsg(null);
+    try {
+      const result = await apiFetch("/api/generate/page-content", {
+        method: "POST",
+        body: { briefing: client.briefing, page: pages[pageIdx] }
+      });
+      if (result.error) throw new Error(result.error);
+      const newContent = { ...content, [pages[pageIdx].id]: result };
+      await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, pages_content: newContent } });
+      setMsg({ type: "success", text: `Conteúdo da página "${pages[pageIdx].nome}" gerado.` });
+      onSave();
+    } catch(e) {
+      setMsg({ type: "error", text: e.message });
+    }
+    setGenerating(null);
+  };
+
+  const generateAll = async () => {
+    for (let i = 0; i < pages.length; i++) {
+      await generate(i);
+      await new Promise(r => setTimeout(r, 800));
+    }
+  };
+
+  const pageContent = pg ? content[pg.id] : null;
+
+  return h("div", null,
+    msg && h("div", { className: `alert alert-${msg.type}` }, msg.text),
+    h("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" } },
+      h("div", { className: "sec-label", style: { margin: 0 } }, "Conteúdo completo por página"),
+      h("button", { className: "btn btn-primary btn-sm", onClick: generateAll, disabled: !!generating },
+        generating !== null ? h("span", null, h("span", { className: "spinner" }), " A gerar...") : "Gerar todas as páginas"
+      )
+    ),
+    h("div", { className: "plan-layout" },
+      h("div", { className: "plan-nav" },
+        h("div", { className: "pn-header" }, "Páginas"),
+        ...pages.map((p, i) =>
+          h("div", { key: p.id, className: "pn-item" + (activeIdx === i ? " active" : ""), onClick: () => setActiveIdx(i) },
+            h("div", { className: "pn-dot" }),
+            h("span", { style: { flex: 1 } }, p.nome),
+            generating === i
+              ? h("span", { className: "spinner" })
+              : content[p.id]
+                ? h("span", { className: "pn-status done" }, "✓")
+                : h("span", { className: "pn-status draft" }, "—")
+          )
+        )
+      ),
+      pg && h("div", null,
+        h("div", { className: "content-page-header" },
+          h("div", null,
+            h("div", { className: "pd-title" }, pg.nome),
+            h("div", { className: "pd-desc" }, pg.descricao)
+          ),
+          h("button", {
+            className: "btn btn-primary btn-sm",
+            onClick: () => generate(activeIdx),
+            disabled: generating !== null
+          }, generating === activeIdx
+            ? h("span", null, h("span", { className: "spinner" }), " A gerar...")
+            : pageContent ? "Regenerar" : "Gerar conteúdo →"
+          )
+        ),
+        !pageContent
+          ? h("div", { className: "alert alert-info" }, "Clica em 'Gerar conteúdo' para criar o copy completo desta página.")
+          : h("div", null,
+              h("div", { className: "card" },
+                h("div", { className: "block-label" }, "SEO"),
+                h("div", { className: "seo-grid" },
+                  h("div", { className: "seo-f" },
+                    h("div", { className: "seo-l" }, "Meta title"),
+                    h("div", { className: "seo-v" }, pageContent.meta_title),
+                    h("div", { className: "seo-c" }, (pageContent.meta_title || "").length + " chars")
+                  ),
+                  h("div", { className: "seo-f" },
+                    h("div", { className: "seo-l" }, "Meta description"),
+                    h("div", { className: "seo-v" }, pageContent.meta_description),
+                    h("div", { className: "seo-c" }, (pageContent.meta_description || "").length + " chars")
+                  )
+                )
+              ),
+              ...(pageContent.secoes || []).map((sec, i) =>
+                h("div", { key: i, className: "card" },
+                  h("div", { className: "content-sec-title" },
+                    h("span", null, sec.nome),
+                    h("span", { className: "type-badge" }, sec.tipo)
+                  ),
+                  sec.conteudo?.headline && h("div", { style: { fontWeight: 600, fontSize: "15px", marginBottom: "6px" } }, sec.conteudo.headline),
+                  sec.conteudo?.subheadline && h("div", { style: { fontStyle: "italic", color: "var(--text2)", marginBottom: "8px", fontSize: "13px" } }, sec.conteudo.subheadline),
+                  sec.conteudo?.corpo && h("div", { className: "content-body" }, sec.conteudo.corpo),
+                  sec.conteudo?.lista?.length > 0 && h("ul", { className: "content-list" },
+                    ...sec.conteudo.lista.map((item, j) => h("li", { key: j }, item))
+                  ),
+                  sec.conteudo?.cta_texto && h("div", { style: { marginTop: "8px", fontWeight: 600, fontSize: "13px", color: "var(--accent)" } }, "→ " + sec.conteudo.cta_texto),
+                  sec.conteudo?.cta_nota && h("div", { style: { fontSize: "11px", color: "var(--text3)", marginTop: "3px" } }, sec.conteudo.cta_nota)
+                )
+              ),
+              pageContent.notas_wp && h("div", { className: "notas-wp" },
+                h("strong", null, "Notas Elementor: "),
+                pageContent.notas_wp
+              )
+            )
+      )
+    )
+  );
+}
+
+// ── WordPress tab ─────────────────────────────────────────────────────────────
+
+function WordPressTab({ client, onSave }) {
+  const [wp, setWp] = useState(client.wp || { url: "", user: "", password: "" });
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+  const [pushing, setPushing] = useState(null);
+  const [pushResults, setPushResults] = useState({});
+  const [msg, setMsg] = useState(null);
+
+  const updWp = (k, v) => setWp(w => ({ ...w, [k]: v }));
+  const pages = client.plan?.paginas || [];
+  const content = client.pages_content || {};
+
+  const saveWp = async () => {
+    await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, wp } });
+    onSave();
+    setMsg({ type: "success", text: "Configuração guardada." });
+    setTimeout(() => setMsg(null), 2000);
+  };
+
+  const testConnection = async () => {
+    setTesting(true);
+    setTestResult(null);
+    const res = await apiFetch("/api/wp/test", { method: "POST", body: wp });
+    setTestResult(res);
+    setTesting(false);
+  };
+
+  const pushPage = async (pg) => {
+    if (!content[pg.id]) { setMsg({ type: "warn", text: `Gera primeiro o conteúdo da página "${pg.nome}".` }); return; }
+    setPushing(pg.id);
+    const res = await apiFetch("/api/wp/push-page", { method: "POST", body: { wp, page: pg, content: content[pg.id] } });
+    setPushResults(r => ({ ...r, [pg.id]: res }));
+    if (res.ok && res.page_id && res.page_id !== pg.wp_page_id) {
+      const updatedPages = pages.map(p => p.id === pg.id ? { ...p, wp_page_id: res.page_id } : p);
+      await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, plan: { ...client.plan, paginas: updatedPages } } });
+      onSave();
+    }
+    setPushing(null);
+  };
+
+  const pushAll = async () => {
+    for (const pg of pages) {
+      if (content[pg.id]) await pushPage(pg);
+    }
+  };
+
+  return h("div", null,
+    h("div", { className: "sec-label" }, "Ligação ao WordPress"),
+    msg && h("div", { className: `alert alert-${msg.type}` }, msg.text),
+    h("div", { className: "card" },
+      h("div", { className: "field" }, h("label", null, "URL do site"), h("input", { placeholder: "https://seusite.com", value: wp.url, onChange: e => updWp("url", e.target.value) })),
+      h("div", { className: "grid2" },
+        h("div", { className: "field" }, h("label", null, "Utilizador WordPress"), h("input", { placeholder: "admin", value: wp.user, onChange: e => updWp("user", e.target.value) })),
+        h("div", { className: "field" }, h("label", null, "Application Password"), h("input", { type: "password", placeholder: "xxxx xxxx xxxx xxxx", value: wp.password, onChange: e => updWp("password", e.target.value) }))
+      ),
+      h("div", { className: "field" },
+        h("div", { className: "hint" }, "💡 Para criar uma Application Password: WordPress Admin → Utilizadores → O teu perfil → Application Passwords → adiciona com o nome 'Designeo Studio'")
+      ),
+      testResult && h("div", { className: `wp-status ${testResult.ok ? "ok" : "error"}` },
+        testResult.ok
+          ? `✓ Ligado como ${testResult.name} (${(testResult.roles || []).join(", ")})`
+          : `✗ Erro: ${testResult.error}`
+      ),
+      h("div", { style: { display: "flex", gap: "8px" } },
+        h("button", { className: "btn btn-primary btn-sm", onClick: testConnection, disabled: testing },
+          testing ? h("span", null, h("span", { className: "spinner" }), " A testar...") : "Testar ligação"
+        ),
+        h("button", { className: "btn btn-sm", onClick: saveWp }, "Guardar")
+      )
+    ),
+
+    testResult?.ok && h("div", null,
+      h("div", { className: "sec-label", style: { marginTop: "1.5rem" } }, "Publicar páginas"),
+      pages.length === 0
+        ? h("div", { className: "alert alert-info" }, "Gera primeiro o plano.")
+        : h("div", null,
+            h("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: "10px" } },
+              h("button", { className: "btn btn-primary btn-sm", onClick: pushAll }, "Publicar todas como rascunho")
+            ),
+            h("div", { className: "card", style: { padding: 0 } },
+              h("table", { className: "push-table" },
+                h("thead", null,
+                  h("tr", null,
+                    h("th", null, "Página"),
+                    h("th", null, "Conteúdo"),
+                    h("th", null, "Estado"),
+                    h("th", null, "")
+                  )
+                ),
+                h("tbody", null,
+                  ...pages.map(pg =>
+                    h("tr", { key: pg.id },
+                      h("td", null, h("strong", null, pg.nome)),
+                      h("td", null, content[pg.id] ? h("span", { style: { color: "var(--green)" } }, "✓ Pronto") : h("span", { style: { color: "var(--text3)" } }, "Sem conteúdo")),
+                      h("td", null,
+                        pushing === pg.id
+                          ? h("span", { className: "spinner" })
+                          : pushResults[pg.id]
+                            ? h("span", { className: `push-result ${pushResults[pg.id].ok ? "ok" : "err"}` },
+                                pushResults[pg.id].ok
+                                  ? `✓ ${pushResults[pg.id].action}`
+                                  : `✗ ${pushResults[pg.id].error?.slice(0, 60)}`
+                              )
+                            : "—"
+                      ),
+                      h("td", null,
+                        pushResults[pg.id]?.ok
+                          ? h("a", { href: pushResults[pg.id].edit_link, target: "_blank", style: { fontSize: "11px", color: "var(--blue)" } }, "Editar no WP →")
+                          : h("button", { className: "btn btn-sm", onClick: () => pushPage(pg), disabled: pushing !== null || !content[pg.id] }, "Publicar")
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+    )
+  );
+}
+
+// ── New client modal ──────────────────────────────────────────────────────────
+
+function NewClientModal({ onClose, onCreate }) {
+  const [form, setForm] = useState({ nomeCliente: "", nomeNegocio: "", tipoNegocio: "" });
+  const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const valid = form.nomeNegocio.trim() && form.tipoNegocio;
+
+  const create = async () => {
+    const tipo = form.tipoNegocio === "Outro" ? form.tipoCustom : form.tipoNegocio;
+    const client = await apiFetch("/api/clients", {
+      method: "POST",
+      body: { nomeCliente: form.nomeCliente, nomeNegocio: form.nomeNegocio, briefing: { ...form, tipo } }
+    });
+    onCreate(client);
+    onClose();
+  };
+
+  return h("div", { className: "modal-overlay", onClick: onClose },
+    h("div", { className: "modal", onClick: e => e.stopPropagation() },
+      h("div", { className: "modal-title" }, "Novo cliente"),
+      h("div", { className: "field" }, h("label", null, "Nome do cliente"), h("input", { placeholder: "Ex: Maria Santos", value: form.nomeCliente, onChange: e => upd("nomeCliente", e.target.value) })),
+      h("div", { className: "field" }, h("label", null, "Nome do negócio *"), h("input", { placeholder: "Ex: Estúdio Zen", value: form.nomeNegocio, onChange: e => upd("nomeNegocio", e.target.value) })),
+      h("div", { className: "field" },
+        h("label", null, "Tipo de negócio *"),
+        h("select", { value: form.tipoNegocio, onChange: e => upd("tipoNegocio", e.target.value) },
+          h("option", { value: "" }, "Selecionar..."),
+          ...TIPO.map(t => h("option", { key: t, value: t }, t))
+        )
+      ),
+      form.tipoNegocio === "Outro" && h("div", { className: "field" }, h("label", null, "Especifica"), h("input", { value: form.tipoCustom || "", onChange: e => upd("tipoCustom", e.target.value) })),
+      h("div", { className: "modal-footer" },
+        h("button", { className: "btn", onClick: onClose }, "Cancelar"),
+        h("button", { className: "btn btn-primary", disabled: !valid, onClick: create }, "Criar cliente")
+      )
+    )
+  );
+}
+
+// ── Compositor ────────────────────────────────────────────────────────────────
+
+const SECTION_LIBRARY = [
+  { tipo: "hero",       nome: "Hero",        desc: "Título + subtítulo + CTAs",   thumb: "hero" },
+  { tipo: "sobre",      nome: "Sobre",        desc: "Texto + imagem (2 colunas)",  thumb: "2col" },
+  { tipo: "servicos",   nome: "Serviços",     desc: "Grid de 3 com numeração",     thumb: "3col" },
+  { tipo: "cta",        nome: "CTA",          desc: "Chamada à acção fundo escuro",thumb: "cta"  },
+  { tipo: "contacto",   nome: "Contacto",     desc: "Info + formulário",           thumb: "2col" },
+  { tipo: "testemunho", nome: "Testemunho",   desc: "Citação de cliente",          thumb: "lines"},
+  { tipo: "faq",        nome: "FAQ",          desc: "Perguntas frequentes",        thumb: "lines"},
+  { tipo: "texto",      nome: "Texto livre",  desc: "Secção de texto genérico",    thumb: "lines"},
+];
+
+const PALETTES = [
+  { id: "noir",     nome: "Noir",     primary: "#1a1a18", bg: "#ffffff", accent: "#f0efe9", dark: "#1a1a18" },
+  { id: "terra",    nome: "Terra",    primary: "#5C3A1E", bg: "#fdf8f3", accent: "#e8ddd0", dark: "#3a2210" },
+  { id: "sage",     nome: "Sage",     primary: "#2d4a3e", bg: "#f4f7f5", accent: "#d4e8dd", dark: "#1a2e26" },
+  { id: "indigo",   nome: "Índigo",   primary: "#1e2d5c", bg: "#f5f6fb", accent: "#dde2f5", dark: "#0f1a3a" },
+  { id: "blush",    nome: "Blush",    primary: "#4a1942", bg: "#fdf5fc", accent: "#f0ddef", dark: "#2d0f28" },
+  { id: "graphite", nome: "Grafite",  primary: "#2d2d2d", bg: "#f8f8f6", accent: "#e8e8e4", dark: "#1a1a1a" },
+];
+
+const FONT_PAIRS = [
+  { id: "playfair-dm",    display: "Playfair Display", body: "DM Sans",     label: "Clássico elegante" },
+  { id: "cormorant-inter",display: "Cormorant Garamond",body: "Inter",      label: "Editorial refinado" },
+  { id: "fraunces-dm",    display: "Fraunces",          body: "DM Sans",    label: "Expressivo moderno" },
+  { id: "inter-inter",    display: "Inter",             body: "Inter",      label: "Minimalista digital" },
+  { id: "libre-source",   display: "Libre Baskerville", body: "Source Sans",label: "Sério e legível" },
+];
+
+function SectionThumb({ type, size = "lib" }) {
+  const w = size === "lib" ? 44 : 36;
+  const h2 = size === "lib" ? 32 : 26;
+  const style = { width: w, height: h2, borderRadius: 3, background: "var(--bg2)", border: "0.5px solid var(--border)", flexShrink: 0, overflow: "hidden", position: "relative", display: "flex", alignItems: "stretch" };
+
+  if (type === "hero") return h("div", { style },
+    h("div", { style: { padding: "4px 5px", width: "100%" } },
+      h("div", { style: { height: 3, background: "var(--text)", borderRadius: 1, marginBottom: 2 } }),
+      h("div", { style: { height: 2, width: "60%", background: "var(--text3)", borderRadius: 1, marginBottom: 3 } }),
+      h("div", { style: { display: "flex", gap: 2 } },
+        h("div", { style: { width: 16, height: 4, background: "var(--text)", borderRadius: 1 } }),
+        h("div", { style: { width: 12, height: 4, border: "0.5px solid var(--text)", borderRadius: 1 } })
+      )
+    )
+  );
+  if (type === "2col") return h("div", { style },
+    h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3, padding: "4px 5px", width: "100%", alignItems: "stretch" } },
+      h("div", { style: { background: "var(--border)", borderRadius: 1 } }),
+      h("div", { style: { background: "var(--bg3)", borderRadius: 1 } })
+    )
+  );
+  if (type === "3col") return h("div", { style },
+    h("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2, padding: "4px 5px", width: "100%", alignItems: "end" } },
+      h("div", { style: { background: "var(--border)", borderRadius: 1, height: "60%" } }),
+      h("div", { style: { background: "var(--border)", borderRadius: 1, height: "80%" } }),
+      h("div", { style: { background: "var(--border)", borderRadius: 1, height: "50%" } })
+    )
+  );
+  if (type === "cta") return h("div", { style: { ...style, background: "var(--text)", justifyContent: "center", alignItems: "center" } },
+    h("div", { style: { width: 20, height: 3, background: "rgba(255,255,255,0.5)", borderRadius: 1 } })
+  );
+  // lines (faq, testemunho, texto)
+  return h("div", { style },
+    h("div", { style: { padding: "5px", display: "flex", flexDirection: "column", gap: 2, justifyContent: "center", width: "100%" } },
+      h("div", { style: { height: 2, width: "100%", background: "var(--border2)", borderRadius: 1 } }),
+      h("div", { style: { height: 2, width: "75%", background: "var(--border2)", borderRadius: 1 } }),
+      h("div", { style: { height: 2, width: "50%", background: "var(--border2)", borderRadius: 1 } })
+    )
+  );
+}
+
+function ColorInput({ colorKey, label, hint, value, onChange }) {
+  const [hex, setHex] = useState(value || "#000000");
+  useEffect(() => { setHex(value || "#000000"); }, [value]);
+  const commit = (v) => { if (/^#[0-9a-fA-F]{6}$/.test(v)) onChange(v); };
+  return h("div", { style: { display: "flex", alignItems: "center", gap: 6, marginBottom: 7 } },
+    h("input", {
+      type: "color", value: hex,
+      style: { width: 26, height: 26, padding: 1, border: "0.5px solid var(--border2)", borderRadius: 4, cursor: "pointer", flexShrink: 0 },
+      onChange: (e) => { setHex(e.target.value); onChange(e.target.value); }
+    }),
+    h("input", {
+      type: "text", value: hex, maxLength: 7,
+      style: { width: 68, fontSize: 11, fontFamily: "monospace", padding: "3px 6px", border: "0.5px solid var(--border2)", borderRadius: 4, background: "var(--bg)", color: "var(--text)" },
+      onChange: (e) => {
+        const v = e.target.value;
+        if (/^#[0-9a-fA-F]{0,6}$/.test(v)) { setHex(v); commit(v); }
+      },
+      onBlur: (e) => commit(e.target.value)
+    }),
+    h("div", null,
+      h("div", { style: { fontSize: 11, fontWeight: 500, color: "var(--text)", lineHeight: 1.2 } }, label),
+      h("div", { style: { fontSize: 10, color: "var(--text3)" } }, hint)
+    )
+  );
+}
+
+function ComposerTab({ client, onSave }) {
+  const pages = client.plan?.paginas || [];
+  const [activePage, setActivePage] = useState(pages[0]?.id || null);
+  const [composition, setComposition] = useState(client.composition || {});
+  const [design, setDesign] = useState(() => {
+    const saved = client.design_system || {};
+    const palId = saved.palette || "noir";
+    const p = PALETTES.find(p => p.id === palId) || PALETTES[0];
+    return {
+      palette: palId,
+      fonts: saved.fonts || "playfair-dm",
+      colors: saved.colors || { primary: p.primary, bg: p.bg, accent: p.accent, dark: p.dark }
+    };
+  });
+  const [pushing, setPushing] = useState(false);
+  const [pushingDs, setPushingDs] = useState(false);
+  const [msg, setMsg] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [fallback, setFallback] = useState(null);
+
+  useEffect(() => { setFallback(null); }, [client.id]);
+
+  const pg = pages.find(p => p.id === activePage);
+  const pageSections = composition[activePage] || [];
+
+  const flash = (type, text) => { setMsg({ type, text }); setTimeout(() => setMsg(null), 3000); };
+
+  const addSection = (libItem) => {
+    const newSec = { id: Date.now(), tipo: libItem.tipo, nome: libItem.nome };
+    const updated = { ...composition, [activePage]: [...pageSections, newSec] };
+    setComposition(updated);
+    persist(updated, design);
+  };
+
+  const removeSection = (secId) => {
+    const updated = { ...composition, [activePage]: pageSections.filter(s => s.id !== secId) };
+    setComposition(updated);
+    persist(updated, design);
+  };
+
+  const moveSection = (secId, dir) => {
+    const arr = [...pageSections];
+    const idx = arr.findIndex(s => s.id === secId);
+    if (dir === -1 && idx === 0) return;
+    if (dir === 1 && idx === arr.length - 1) return;
+    const tmp = arr[idx]; arr[idx] = arr[idx + dir]; arr[idx + dir] = tmp;
+    const updated = { ...composition, [activePage]: arr };
+    setComposition(updated);
+    persist(updated, design);
+  };
+
+  const persist = async (comp, ds) => {
+    setSaving(true);
+    await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, composition: comp, design_system: ds } });
+    setSaving(false);
+    onSave();
+  };
+
+  const updateDesign = (key, val) => {
+    let ds;
+    if (key === "palette") {
+      const p = PALETTES.find(p => p.id === val) || PALETTES[0];
+      ds = { ...design, palette: val, colors: { primary: p.primary, bg: p.bg, accent: p.accent, dark: p.dark } };
+    } else if (key === "colors") {
+      ds = { ...design, palette: "custom", colors: val };
+    } else {
+      ds = { ...design, [key]: val };
+    }
+    setDesign(ds);
+    setFallback(null);
+    persist(composition, ds);
+  };
+
+  const pushDesign = async () => {
+    const wp = client.wp || {};
+    if (!wp.url || !wp.user || !wp.password) { flash("error", "Configura a ligação WordPress primeiro."); return; }
+    setPushingDs(true);
+    setFallback(null);
+    const colors = design.colors || {};
+    const fonts = FONT_PAIRS.find(f => f.id === design.fonts) || FONT_PAIRS[0];
+    const res = await apiFetch("/api/wp/push-design", { method: "POST", body: { wp, colors, fonts } });
+    setPushingDs(false);
+    if (res.ok) {
+      flash("success", "Design system aplicado ao site.");
+    } else if (res.fallback) {
+      setFallback({ theme_json: res.theme_json, message: res.message });
+    } else {
+      flash("error", res.error || "Erro ao aplicar design.");
+    }
+  };
+
+  const downloadThemeJson = () => {
+    if (!fallback) return;
+    const blob = new Blob([JSON.stringify(fallback.theme_json, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "theme.json"; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const pushPage = async () => {
+    const wp = client.wp || {};
+    if (!wp.url || !wp.user || !wp.password) { flash("error", "Configura a ligação WordPress primeiro."); return; }
+    if (!pg) return;
+    if (pageSections.length === 0) { flash("error", "Adiciona secções ao canvas primeiro."); return; }
+
+    // Build content from existing page content + composition order
+    const pageContent = (client.pages_content || {})[activePage];
+    if (!pageContent) { flash("warn", "Gera primeiro o conteúdo desta página no separador Conteúdo."); return; }
+
+    // Reorder sections according to composition
+    const reorderedContent = {
+      ...pageContent,
+      secoes: pageSections.map(cs => {
+        const existing = (pageContent.secoes || []).find(s => s.tipo === cs.tipo);
+        return existing || { nome: cs.nome, tipo: cs.tipo, conteudo: { headline: cs.nome } };
+      })
+    };
+
+    setPushing(true);
+    const res = await apiFetch("/api/wp/push-page", { method: "POST", body: { wp, page: pg, content: reorderedContent } });
+    setPushing(false);
+    if (res.ok) {
+      flash("success", `Página "${pg.nome}" publicada como rascunho.`);
+      if (res.page_id && res.page_id !== pg.wp_page_id) {
+        const allPages = client.plan?.paginas || [];
+        const updatedPages = allPages.map(p => p.id === pg.id ? { ...p, wp_page_id: res.page_id } : p);
+        await apiFetch(`/api/clients/${client.id}`, { method: "PUT", body: { ...client, plan: { ...client.plan, paginas: updatedPages } } });
+        onSave();
+      }
+    } else {
+      flash("error", res.error || "Erro ao publicar.");
+    }
+  };
+
+  if (pages.length === 0) return h("div", { className: "alert alert-info" }, "Gera primeiro o plano no separador Briefing.");
+
+  const fonts = FONT_PAIRS.find(f => f.id === design.fonts) || FONT_PAIRS[0];
+
+  return h("div", null,
+    h("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" } },
+      h("div", { className: "sec-label", style: { margin: 0 } }, "Compositor de páginas"),
+      h("div", { style: { display: "flex", gap: 8, alignItems: "center" } },
+        saving && h("span", { style: { fontSize: 11, color: "var(--text3)" } }, "A guardar..."),
+        msg && h("span", { className: `alert alert-${msg.type}`, style: { padding: "4px 10px", margin: 0, fontSize: 11 } }, msg.text)
+      )
+    ),
+
+    // Page selector
+    h("div", { className: "page-selector" },
+      ...pages.map(p => h("button", {
+        key: p.id,
+        className: "page-pill" + (activePage === p.id ? " active" : ""),
+        onClick: () => setActivePage(p.id)
+      }, p.nome))
+    ),
+
+    h("div", { className: "comp-layout" },
+
+      // ── Left: Section library
+      h("div", { className: "comp-panel" },
+        h("div", { className: "comp-panel-header" }, "Secções disponíveis"),
+        h("div", { className: "sec-lib" },
+          ...SECTION_LIBRARY.map(item =>
+            h("div", { key: item.tipo, className: "sec-lib-item", onClick: () => addSection(item) },
+              h(SectionThumb, { type: item.thumb, size: "lib" }),
+              h("div", { className: "sec-lib-info" },
+                h("div", { className: "sec-lib-name" }, item.nome),
+                h("div", { className: "sec-lib-desc" }, item.desc)
+              ),
+              h("span", { className: "sec-lib-add" }, "+")
+            )
+          )
+        )
+      ),
+
+      // ── Center: Canvas
+      h("div", { className: "comp-panel" },
+        h("div", { className: "comp-panel-header", style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
+          h("span", null, pg ? `Canvas — ${pg.nome}` : "Canvas"),
+          pageSections.length > 0 && h("button", {
+            className: "canvas-btn",
+            style: { width: "auto", padding: "0 8px", fontSize: 11, opacity: pushing ? 0.5 : 1 },
+            onClick: pushPage,
+            disabled: pushing
+          }, pushing ? h("span", { className: "spinner" }) : "↑ Publicar")
+        ),
+        pageSections.length === 0
+          ? h("div", { className: "canvas-empty" }, "← Clica numa secção para adicionar")
+          : h("div", null,
+              ...pageSections.map((sec, idx) => {
+                const libItem = SECTION_LIBRARY.find(l => l.tipo === sec.tipo) || SECTION_LIBRARY[7];
+                const pageContent = (client.pages_content || {})[activePage];
+                const secContent = pageContent?.secoes?.find(s => s.tipo === sec.tipo);
+                const preview = secContent?.conteudo?.headline;
+                return h("div", { key: sec.id, className: "canvas-section" },
+                  h("div", { className: "canvas-sec-header" },
+                    h(SectionThumb, { type: libItem.thumb, size: "canvas" }),
+                    h("div", { className: "canvas-sec-info" },
+                      h("div", { className: "canvas-sec-type" }, sec.tipo),
+                      h("div", { className: "canvas-sec-name" }, sec.nome)
+                    ),
+                    h("div", { className: "canvas-sec-actions" },
+                      h("button", { className: "canvas-btn", onClick: () => moveSection(sec.id, -1), disabled: idx === 0, title: "Mover para cima" }, "↑"),
+                      h("button", { className: "canvas-btn", onClick: () => moveSection(sec.id, 1), disabled: idx === pageSections.length - 1, title: "Mover para baixo" }, "↓"),
+                      h("button", { className: "canvas-btn danger", onClick: () => removeSection(sec.id), title: "Remover" }, "×")
+                    )
+                  ),
+                  preview && h("div", { className: "canvas-sec-content" }, `"${preview}"`)
+                );
+              })
+            )
+      ),
+
+      // ── Right: Design system
+      h("div", { className: "comp-panel" },
+        h("div", { className: "comp-panel-header" }, "Design system"),
+
+        // Cores personalizadas
+        h("div", { className: "ds-section" },
+          h("div", { className: "ds-label" }, "Cores"),
+          ...[
+            { key: "primary", label: "Principal",  hint: "texto / on-surface" },
+            { key: "bg",      label: "Fundo",       hint: "surface" },
+            { key: "accent",  label: "Destaque",    hint: "accent" },
+            { key: "dark",    label: "Escuro",      hint: "CTA / footer" },
+          ].map(({ key, label, hint }) =>
+            h(ColorInput, {
+              key,
+              colorKey: key,
+              label,
+              hint,
+              value: (design.colors || {})[key] || "#000000",
+              onChange: (v) => {
+                const colors = { ...(design.colors || {}), [key]: v };
+                updateDesign("colors", colors);
+              }
+            })
+          )
+        ),
+
+        // Paletas pré-definidas (atalhos)
+        h("div", { className: "ds-section" },
+          h("div", { className: "ds-label" }, "Paletas"),
+          h("div", { className: "palette-grid" },
+            ...PALETTES.map(p =>
+              h("div", {
+                key: p.id,
+                className: "palette-opt" + (design.palette === p.id ? " sel" : ""),
+                style: { background: p.bg },
+                onClick: () => updateDesign("palette", p.id),
+                title: `${p.nome} — clica para aplicar`
+              },
+                h("div", { style: { display: "flex", gap: 2, marginRight: 2 } },
+                  h("div", { className: "palette-dot", style: { background: p.primary } }),
+                  h("div", { className: "palette-dot", style: { background: p.accent } }),
+                  h("div", { className: "palette-dot", style: { background: p.dark } })
+                ),
+                h("span", { style: { fontSize: 10 } }, p.nome)
+              )
+            )
+          )
+        ),
+
+        // Tipografia
+        h("div", { className: "ds-section" },
+          h("div", { className: "ds-label" }, "Tipografia"),
+          ...FONT_PAIRS.map(f =>
+            h("div", {
+              key: f.id,
+              className: "font-opt" + (design.fonts === f.id ? " sel" : ""),
+              onClick: () => updateDesign("fonts", f.id)
+            },
+              h("div", { className: "font-opt-display" }, f.display),
+              h("div", { className: "font-opt-body" }, f.body + " · " + f.label)
+            )
+          )
+        ),
+
+        // Aplicar
+        h("div", { className: "ds-section" },
+          h("div", { className: "ds-label" }, "Aplicar ao site"),
+          h("div", { style: { display: "flex", alignItems: "center", gap: 4, marginBottom: 8 } },
+            ...(["primary", "bg", "accent", "dark"]).map(k =>
+              h("div", { key: k, style: { width: 14, height: 14, borderRadius: 2, background: (design.colors || {})[k] || "#ccc", border: "0.5px solid var(--border2)", flexShrink: 0 } })
+            ),
+            h("span", { style: { fontSize: 11, color: "var(--text3)", marginLeft: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" } }, fonts.display)
+          ),
+          h("button", {
+            className: "ds-push-btn primary",
+            onClick: pushDesign,
+            disabled: pushingDs
+          }, pushingDs ? h("span", { className: "spinner" }) : "Aplicar design →"),
+
+          fallback && h("div", { style: { marginTop: 8, padding: "8px 10px", background: "var(--bg2)", border: "0.5px solid var(--border)", borderRadius: "var(--radius)", fontSize: 11 } },
+            h("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 } },
+              h("div", { style: { color: "var(--text2)", lineHeight: 1.5, paddingRight: 6 } }, fallback.message),
+              h("button", {
+                style: { background: "none", border: "none", cursor: "pointer", color: "var(--text3)", fontSize: 14, lineHeight: 1, padding: "0 2px", flexShrink: 0 },
+                onClick: () => setFallback(null),
+                title: "Fechar"
+              }, "×")
+            ),
+            h("button", {
+              className: "ds-push-btn",
+              style: { marginTop: 0, fontWeight: 600 },
+              onClick: downloadThemeJson
+            }, "↓ Descarregar theme.json")
+          )
+        )
+      )
+    )
+  );
+}
+
+// ── Client view ───────────────────────────────────────────────────────────────
+
+function ClientView({ clientId, onBack }) {
+  const [client, setClient] = useState(null);
+  const [activeTab, setActiveTab] = useState("briefing");
+
+  const load = useCallback(async () => {
+    const clients = await apiFetch("/api/clients");
+    setClient(clients.find(c => c.id === clientId));
+  }, [clientId]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const deleteClient = async () => {
+    if (!confirm(`Apagar o cliente "${client.nomeNegocio}"? Esta acção é irreversível.`)) return;
+    await apiFetch(`/api/clients/${clientId}`, { method: "DELETE" });
+    onBack();
+  };
+
+  if (!client) return h("div", { className: "main-inner" }, h("div", { className: "spinner" }));
+
+  const content = client.pages_content || {};
+  const doneCount = Object.keys(content).length;
+  const totalPages = client.plan?.paginas?.length || 0;
+
+  const TABS = [
+    { id: "briefing",   label: "Briefing" },
+    { id: "plano",      label: "Plano",      badge: !!client.plan },
+    { id: "conteudo",   label: "Conteúdo",   badge: doneCount > 0 },
+    { id: "compositor", label: "Compositor", badge: !!client.composition },
+    { id: "wordpress",  label: "WordPress" }
+  ];
+
+  return h("div", { className: "main-inner" },
+    h("div", { className: "client-header" },
+      h("div", null,
+        h("div", { className: "client-name" }, client.nomeNegocio || "Sem nome"),
+        h("div", { className: "client-meta" },
+          client.nomeCliente ? `Cliente: ${client.nomeCliente}` : "",
+          client.plan ? ` · ${totalPages} páginas · ${doneCount}/${totalPages} com conteúdo` : " · Sem plano gerado"
+        )
+      ),
+      h("button", { className: "btn-danger", onClick: deleteClient }, "Apagar")
+    ),
+    h("div", { className: "tabs" },
+      ...TABS.map(t =>
+        h("button", { key: t.id, className: "tab" + (activeTab === t.id ? " active" : ""), onClick: () => setActiveTab(t.id) },
+          t.label,
+          t.badge ? h("span", { className: "badge" }) : null
+        )
+      )
+    ),
+    activeTab === "briefing"   && h(BriefingTab,   { client, onSave: load }),
+    activeTab === "plano"      && h(PlanTab,       { client, onSave: load }),
+    activeTab === "conteudo"   && h(ContentTab,    { client, onSave: load }),
+    activeTab === "compositor" && h(ComposerTab,   { client, onSave: load }),
+    activeTab === "wordpress"  && h(WordPressTab,  { client, onSave: load })
+  );
+}
+
+// ── App root ──────────────────────────────────────────────────────────────────
+
+function App() {
+  const [clients, setClients] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [showNew, setShowNew] = useState(false);
+  const [apiKey, setApiKey] = useState(localStorage.getItem("ds_api_key") || "");
+
+  const loadClients = async () => {
+    const data = await apiFetch("/api/clients");
+    setClients(Array.isArray(data) ? data : []);
+  };
+
+  useEffect(() => { loadClients(); }, []);
+
+  const saveApiKey = (v) => {
+    const trimmed = v.trim();
+    setApiKey(trimmed);
+    localStorage.setItem("ds_api_key", trimmed);
+  };
+
+  return h("div", { id: "app" },
+    showNew && h(NewClientModal, { onClose: () => setShowNew(false), onCreate: (c) => { loadClients(); setSelected(c.id); } }),
+    h("div", { className: "sidebar" },
+      h("div", { className: "sb-header" },
+        h("div", { className: "sb-logo" }, "Designeo"),
+        h("div", { className: "sb-title" }, "Site Studio")
+      ),
+      h("div", { className: "sb-section" }, "Clientes"),
+      ...clients.map(c =>
+        h("div", { key: c.id, className: "sb-client" + (selected === c.id ? " active" : ""), onClick: () => setSelected(c.id) },
+          h("div", { className: "dot" }),
+          c.nomeNegocio || "Sem nome"
+        )
+      ),
+      h("button", { className: "sb-add", onClick: () => setShowNew(true) }, "+ Novo cliente"),
+      h("div", { className: "sb-footer" },
+        h("div", { className: "api-key-label" }, "Claude API Key"),
+        h("input", { className: "api-key-input", type: "password", placeholder: "sk-ant-...", value: apiKey, onChange: e => saveApiKey(e.target.value) }),
+        apiKey && !apiKey.startsWith("sk-ant-") && h("div", { style: { fontSize: 10, color: "var(--red)", marginTop: 4 } }, "⚠ Key inválida"),
+        apiKey && apiKey.startsWith("sk-ant-") && h("div", { style: { fontSize: 10, color: "var(--green)", marginTop: 4 } }, "✓ Key configurada")
+      )
+    ),
+    h("div", { className: "main" },
+      selected
+        ? h(ClientView, { clientId: selected, onBack: () => { setSelected(null); loadClients(); } })
+        : h("div", { className: "welcome" },
+            h("h1", null, "Designeo Site Studio"),
+            h("p", null, "Selecciona um cliente ou cria um novo para começar.")
+          )
+    )
+  );
+}
+
+ReactDOM.render(h(App), document.getElementById("app"));
+</script>
+</body>
+</html>
