@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 from gutenberg import build_page_blocks
+import db_clients
 
 # ─── Configuração ────────────────────────────────────────────────────────────
 ANTHROPIC_API_URL  = "https://api.anthropic.com/v1/messages"
@@ -118,7 +119,7 @@ def index():
 @app.route("/api/clients", methods=["GET"])
 def get_clients():
     try:
-        return jsonify(load_clients())
+        return jsonify(db_clients.listar_para_frontend())
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

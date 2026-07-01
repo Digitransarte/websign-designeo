@@ -68,3 +68,20 @@ def obter_por_slug(nome_ficheiro):
         return dict(linha) if linha else None
     finally:
         con.close()
+
+def listar_para_frontend():
+    """
+    Lista clientes no formato que o index.html espera (nomeCliente/nomeNegocio),
+    para a troca ser transparente no frontend. Traduz os campos da studio.db.
+    """
+    traduzidos = []
+    for c in listar_clientes():
+        traduzidos.append({
+            "id": c["id"],                       # id inteiro da base (chave mestra)
+            "nomeCliente": c["nome"],
+            "nomeNegocio": c["empresa"] or "",
+            "sector": c["sector"] or "",
+            "nome_ficheiro": c["nome_ficheiro"] or "",
+            "email": c["email"] or "",
+        })
+    return traduzidos
