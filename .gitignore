@@ -27,3 +27,5 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+clients_backup_*.json
+sites_data/

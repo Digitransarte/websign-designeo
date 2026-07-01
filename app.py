@@ -5,6 +5,7 @@ from flask_cors import CORS
 import requests
 from gutenberg import build_page_blocks
 import db_clients
+import sites_data
 
 # ─── Configuração ────────────────────────────────────────────────────────────
 ANTHROPIC_API_URL  = "https://api.anthropic.com/v1/messages"
@@ -43,6 +44,22 @@ def save_clients(clients):
 
 def find_client(clients, cid):
     return next((c for c in clients if c["id"] == cid), None)
+
+def _fundir_cliente(identidade, producao):
+    """
+    Junta identidade (da studio.db) + producao (do sites_data) num objecto unico,
+    no formato que o index.html espera. A identidade vem SEMPRE fresca da base;
+    a producao (briefing, plan, pages_content, wp, ...) vem do ficheiro local.
+    """
+    return {
+        "id": identidade["id"],
+        "nomeCliente": identidade["nome"],
+        "nomeNegocio": identidade["empresa"] or "",
+        "sector": identidade["sector"] or "",
+        "nome_ficheiro": identidade["nome_ficheiro"] or "",
+        "email": identidade["email"] or "",
+        **producao,
+    }
 
 def extract_json_from_claude(raw_text: str) -> dict:
     """
@@ -119,7 +136,14 @@ def index():
 @app.route("/api/clients", methods=["GET"])
 def get_clients():
     try:
-        return jsonify(db_clients.listar_para_frontend())
+        # Identidade vem da studio.db (so-leitura). Para cada cliente, juntamos
+        # a producao local (briefing, plan, ...) para o frontend ter o objecto
+        # completo — ele seleciona o cliente a partir desta lista, sem novo pedido.
+        resultado = []
+        for identidade in db_clients.listar_clientes():
+            producao = sites_data.ler(identidade["id"])
+            resultado.append(_fundir_cliente(identidade, producao))
+        return jsonify(resultado)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -141,22 +165,36 @@ def create_client():
 @app.route("/api/clients/<cid>", methods=["PUT"])
 def update_client(cid):
     try:
-        clients = load_clients()
-        client = find_client(clients, cid)
-        if not client:
-            return jsonify({"error": "not found"}), 404
-        client.update(request.json)
-        save_clients(clients)
-        return jsonify(client)
+        # O id da studio.db e' inteiro; a URL traz string.
+        try:
+            cid_int = int(cid)
+        except (TypeError, ValueError):
+            return jsonify({"error": "id invalido"}), 400
+
+        # Identidade tem de existir na studio.db (fonte de verdade, so-leitura).
+        identidade = db_clients.obter_cliente(cid_int)
+        if not identidade:
+            return jsonify({"error": "cliente nao existe na studio.db"}), 404
+
+        # Grava SO producao (a whitelist do sites_data descarta a identidade).
+        dados = request.json or {}
+        producao = sites_data.guardar(cid_int, dados)
+
+        # Devolve o objecto fundido: identidade fresca da base + producao guardada.
+        return jsonify(_fundir_cliente(identidade, producao))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route("/api/clients/<cid>", methods=["DELETE"])
 def delete_client(cid):
     try:
-        clients = load_clients()
-        clients = [c for c in clients if c["id"] != cid]
-        save_clients(clients)
+        try:
+            cid_int = int(cid)
+        except (TypeError, ValueError):
+            return jsonify({"error": "id invalido"}), 400
+        # NAO apaga o cliente na studio.db (isso e' o Business OS).
+        # Apaga apenas o material de producao local, se existir.
+        sites_data.apagar(cid_int)
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
