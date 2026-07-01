@@ -22,3 +22,8 @@ Thumbs.db
 
 # Claude Code (configuração local)
 .claude/settings.local.json
+
+# Bases de dados SQLite
+*.db
+*.sqlite
+*.sqlite3
