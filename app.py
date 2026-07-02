@@ -147,20 +147,6 @@ def get_clients():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/api/clients", methods=["POST"])
-def create_client():
-    try:
-        clients = load_clients()
-        data = request.json
-        data["id"] = str(int(time.time() * 1000))
-        data.setdefault("plan", None)
-        data.setdefault("pages_content", {})
-        data.setdefault("wp", {"url": "", "user": "", "password": ""})
-        clients.append(data)
-        save_clients(clients)
-        return jsonify(data), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route("/api/clients/<cid>", methods=["PUT"])
 def update_client(cid):

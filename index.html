@@ -703,44 +703,6 @@ function WordPressTab({ client, onSave }) {
   );
 }
 
-// ── New client modal ──────────────────────────────────────────────────────────
-
-function NewClientModal({ onClose, onCreate }) {
-  const [form, setForm] = useState({ nomeCliente: "", nomeNegocio: "", tipoNegocio: "" });
-  const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
-  const valid = form.nomeNegocio.trim() && form.tipoNegocio;
-
-  const create = async () => {
-    const tipo = form.tipoNegocio === "Outro" ? form.tipoCustom : form.tipoNegocio;
-    const client = await apiFetch("/api/clients", {
-      method: "POST",
-      body: { nomeCliente: form.nomeCliente, nomeNegocio: form.nomeNegocio, briefing: { ...form, tipo } }
-    });
-    onCreate(client);
-    onClose();
-  };
-
-  return h("div", { className: "modal-overlay", onClick: onClose },
-    h("div", { className: "modal", onClick: e => e.stopPropagation() },
-      h("div", { className: "modal-title" }, "Novo cliente"),
-      h("div", { className: "field" }, h("label", null, "Nome do cliente"), h("input", { placeholder: "Ex: Maria Santos", value: form.nomeCliente, onChange: e => upd("nomeCliente", e.target.value) })),
-      h("div", { className: "field" }, h("label", null, "Nome do negócio *"), h("input", { placeholder: "Ex: Estúdio Zen", value: form.nomeNegocio, onChange: e => upd("nomeNegocio", e.target.value) })),
-      h("div", { className: "field" },
-        h("label", null, "Tipo de negócio *"),
-        h("select", { value: form.tipoNegocio, onChange: e => upd("tipoNegocio", e.target.value) },
-          h("option", { value: "" }, "Selecionar..."),
-          ...TIPO.map(t => h("option", { key: t, value: t }, t))
-        )
-      ),
-      form.tipoNegocio === "Outro" && h("div", { className: "field" }, h("label", null, "Especifica"), h("input", { value: form.tipoCustom || "", onChange: e => upd("tipoCustom", e.target.value) })),
-      h("div", { className: "modal-footer" },
-        h("button", { className: "btn", onClick: onClose }, "Cancelar"),
-        h("button", { className: "btn btn-primary", disabled: !valid, onClick: create }, "Criar cliente")
-      )
-    )
-  );
-}
-
 // ── Compositor ────────────────────────────────────────────────────────────────
 
 const SECTION_LIBRARY = [
@@ -1166,8 +1128,8 @@ function ClientView({ clientId, onBack }) {
 
   useEffect(() => { load(); }, [load]);
 
-  const deleteClient = async () => {
-    if (!confirm(`Apagar o cliente "${client.nomeNegocio}"? Esta acção é irreversível.`)) return;
+  const limparConteudo = async () => {
+    if (!confirm(`Limpar todo o conteúdo do site de "${client.nomeNegocio}"?\n\nO cliente mantém-se (gerido no Designeo Studio). Apagam-se apenas o briefing, plano e conteúdos gerados aqui.`)) return;
     await apiFetch(`/api/clients/${clientId}`, { method: "DELETE" });
     onBack();
   };
@@ -1195,7 +1157,7 @@ function ClientView({ clientId, onBack }) {
           client.plan ? ` · ${totalPages} páginas · ${doneCount}/${totalPages} com conteúdo` : " · Sem plano gerado"
         )
       ),
-      h("button", { className: "btn-danger", onClick: deleteClient }, "Apagar")
+      h("button", { className: "btn-danger", onClick: limparConteudo }, "Limpar conteúdo")
     ),
     h("div", { className: "tabs" },
       ...TABS.map(t =>
@@ -1218,7 +1180,6 @@ function ClientView({ clientId, onBack }) {
 function App() {
   const [clients, setClients] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [showNew, setShowNew] = useState(false);
   const [apiKey, setApiKey] = useState(localStorage.getItem("ds_api_key") || "");
 
   const loadClients = async () => {
@@ -1235,7 +1196,6 @@ function App() {
   };
 
   return h("div", { id: "app" },
-    showNew && h(NewClientModal, { onClose: () => setShowNew(false), onCreate: (c) => { loadClients(); setSelected(c.id); } }),
     h("div", { className: "sidebar" },
       h("div", { className: "sb-header" },
         h("div", { className: "sb-logo" }, "Designeo"),
@@ -1248,7 +1208,6 @@ function App() {
           c.nomeNegocio || "Sem nome"
         )
       ),
-      h("button", { className: "sb-add", onClick: () => setShowNew(true) }, "+ Novo cliente"),
       h("div", { className: "sb-footer" },
         h("div", { className: "api-key-label" }, "Claude API Key"),
         h("input", { className: "api-key-input", type: "password", placeholder: "sk-ant-...", value: apiKey, onChange: e => saveApiKey(e.target.value) }),
@@ -1261,7 +1220,7 @@ function App() {
         ? h(ClientView, { clientId: selected, onBack: () => { setSelected(null); loadClients(); } })
         : h("div", { className: "welcome" },
             h("h1", null, "Designeo Site Studio"),
-            h("p", null, "Selecciona um cliente ou cria um novo para começar.")
+            h("p", null, "Selecciona um cliente para começar. Os clientes criam-se no Designeo Studio.")
           )
     )
   );
