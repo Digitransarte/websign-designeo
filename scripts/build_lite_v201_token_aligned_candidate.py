@@ -44,7 +44,7 @@ TOKEN = re.compile(
     r"(?P<css>var\(--wp--preset--(?P<css_kind>color|font-size|font-family|spacing)--(?P<css_slug>[a-z0-9-]+)\))"
     r"|(?P<ref>var:preset\|(?P<ref_kind>color|font-size|font-family|spacing)\|(?P<ref_slug>[a-z0-9-]+))"
     r'|(?P<attr>"(?P<attr_name>backgroundColor|textColor|fontSize|fontFamily)":"(?P<attr_slug>[a-z0-9-]+)")'
-    r"|(?P<class>has-(?P<class_slug>[a-z0-9-]+)-(?P<class_type>background-color|color|font-size|font-family))"
+    r"|(?P<class>has-(?P<class_slug>[a-z0-9-]+?)-(?P<class_type>background-color|font-size|font-family|color))"
 )
 # WP renders a slug starting with a digit as has-3-xl-font-size, not has-3xl.
 def from_class(value: str) -> str:
