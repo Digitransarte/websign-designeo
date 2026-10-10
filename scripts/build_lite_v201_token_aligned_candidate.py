@@ -76,6 +76,8 @@ def audit_references(data: str, target: dict[str, set[str]]) -> list[str]:
             kind={"background-color":"color","color":"color",
                   "font-size":"font-size","font-family":"font-family"}[match.group("class_type")]
             slug=from_class(match.group("class_slug"))
+            if kind == "color" and slug in {"text", "link"}:
+                continue  # Gutenberg utility classes, not color palette tokens.
         if slug not in target[kind]:
             issues.append(f"{kind}/{slug}")
     return sorted(set(issues))
@@ -98,6 +100,8 @@ def remap_pattern(data: str, source: dict[str,set[str]], target: dict[str,set[st
                   "font-size":"font-size","font-family":"font-family"}[match.group("class_type")]
             slug=from_class(match.group("class_slug"))
             typ="class"
+            if kind == "color" and slug in {"text", "link"}:
+                return match.group(0)
         if slug not in source[kind]:
             raise ValueError(f"Unexpected source {kind}/{slug}")
         new=MAPPING[kind].get(slug)
