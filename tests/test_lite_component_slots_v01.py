@@ -100,7 +100,7 @@ class LiteComponentSlotsTests(unittest.TestCase):
     def test_non_html_scheme_image_rejected(self):
         with tempfile.TemporaryDirectory() as folder:
             doc=example_document()
-            img=doc["pages"][1]["nodes"][1]["children"][0]["children"][1]["children"][0]
+            img=doc["pages"][1]["nodes"][1]["children"][0]["children"][0]["children"][1]["children"][0]
             img["src"]="data:image/svg+xml,private"
             out=bind_lite_component_slots(doc,self._manifest(folder),
                                           validate_site_document=fake_validator)
