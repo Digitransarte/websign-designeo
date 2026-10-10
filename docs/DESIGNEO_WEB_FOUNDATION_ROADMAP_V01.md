@@ -24,6 +24,30 @@ Venture OS → consulta os componentes prontos e mede reutilização, custo e pr
 Venture OS NÃO é o owner dos templates nem da infraestrutura de hosting.
 ```
 
+## Research — reutilizar Website Research Lab (WRL)
+
+**Aplicação existente, desenvolvida anteriormente pelo utilizador; estado reportado, ainda não verificado no código em 2026-10-10.** Local conhecido: `C:\\projetos\\WebsiteResearchLab-MVP-0.1\\WebsiteResearchLab` (Windows local; não foi encontrado repositório WRL entre os GitHub acessíveis). Última versão reportada: **v0.3.2.1**, com **110 testes** reportados, FastAPI/SQLite/Jinja/Playwright, capturas desktop/mobile, extração de HTML/DOM/CSS e metadados, análise de estrutura visual/layouts/componentes/SEO/acessibilidade e crawler multipágina controlado (limites típicos 25 páginas/profundidade 2). Não assumir que estes testes passaram recentemente, nem que a integração Websign existe.
+
+**Papel canónico:** observador/instrumento de investigação **local, determinístico**. Manter o WRL como aplicação autónoma. Não duplicar Playwright, crawler, base de dados ou UI de pesquisa dentro de Websign/DesignOS. O WRL não deve gerar clones de websites; a sua saída deve ser **evidência e padrões abstratos**, sujeitos a revisão humana.
+
+Fluxo pretendido:
+
+```text
+Sites e referências selecionados
+   → Website Research Lab (captura e análise, URL/fonte/data)
+   → Evidence / Findings JSON exportável (sem media protegidos)
+   → Padrões: navegação, layout, secções, CTA, tipografia/cores observadas,
+      componentes, responsividade e acessibilidade
+   → DesignOS / Design Agent: interpretação + decisões criativas originais
+   → Designeo Base: componentes e tokens próprios
+   → Websign/SiteDocument: modelo web e renderer Elementor/Gutenberg
+   → QA técnico e visual → WordPress sandbox / hosting quando aprovado
+```
+
+**Fronteira de integração inicial:** WRL → exportação JSON versionada para pesquisa/design. O DesignOS interpreta; o Websign produz. Não mexer no motor interno do WRL nem criar integração bidirecional/automatizada antes de conhecer o formato atual das exportações. Definir campos mínimos: `source_url`, `captured_at`, `page_type`, `observations`, `evidence_refs`, `confidence`, `sections`, `patterns`, `assets_rights_status`, `analysis_version`; validar com dados reais e contrato canónico antes de fixar schema.
+
+**WEB-01 acrescenta:** recuperar workspace Windows local, versão/commit, comandos de arranque e testes; inspecionar output de site single-page e de crawl multipágina, verificar como grava evidência e se suporta exportação; mapear o que é observação factual vs interpretação; avaliar limites legais, privacidade, robots/rate limits e direitos de screenshots/assets; só depois especificar um adapter mínimo consumido pelo DesignOS. Não enviar corpus/HTML privado ao GitHub.
+
 ## O que já existe e deve ser auditado antes de escrever novo código
 
 **Fontes verificadas:** `Digitransarte/websign-designeo` tem `gutenberg.py` com builders de blocos e secções, `app.py`, dados multi-cliente, testes HTML de baseline e `Templates/designeo-lite-v1.1.zip`, `v2.0.zip`, `v2.0.1.zip`. `Digitransarte/design-os` é o owner do fluxo de design e brand workflow. `Digitransarte/designeo-studio` tem templates de **entregáveis de serviços**, distintos de templates de websites. Não os confundir.
@@ -36,6 +60,7 @@ Venture OS NÃO é o owner dos templates nem da infraestrutura de hosting.
 
 ### WEB-01 — Arqueologia e mapa de capacidades existentes
 - Identificar repositórios, módulos, versões, contratos, dependências e o que é reutilizável.
+- **WRL:** localizar o workspace Windows, auditar v0.3.2.1/crawler/extrator e amostras JSON; manter aplicação independente, com handoff estruturado apenas à camada de Research/DesignOS.
 - Inventariar 1 WordPress sandbox, versões dos motores Elementor/Gutenberg e estado de publicação.
 - Verificar “o que já corre”, “o que apenas compila”, “o que ainda falta”, em matriz com provas.
 - **Done:** inventário concreto, sem soluções redundantes nem novos serviços.
