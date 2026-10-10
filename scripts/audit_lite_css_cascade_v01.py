@@ -66,7 +66,8 @@ def parse_css(css: str) -> list:
                 declarations=tinycss2.parse_declaration_list(
                     node.content,skip_whitespace=True,skip_comments=True)
                 if any(d.type=="error" or
-                       (d.type=="declaration" and not d.value and
+                       (d.type=="declaration" and
+                        not tinycss2.serialize(d.value).strip() and
                         not d.name.startswith("--"))
                        for d in declarations):
                     raise ValueError("Invalid CSS declaration")
