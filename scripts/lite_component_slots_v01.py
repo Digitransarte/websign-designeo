@@ -256,8 +256,9 @@ def bind_lite_component_slots(document: Any, manifest: Any, *,
                 blocked.append({"section_ref":ref,"reason":result.get(
                     "reason","pattern_not_selected")})
                 continue
-            leaves=list(_walk(section))
+            leaves=[]
             try:
+                leaves=list(_walk(section))
                 slots=BINDERS[chosen](section,leaves)
             except (LiteBindingError,ValueError,TypeError) as exc:
                 # Never report private content in diagnostics.
