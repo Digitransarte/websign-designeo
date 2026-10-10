@@ -1,0 +1,144 @@
+/* Designeo Lite / Websign Native Block Style Bridge v0.1.
+ * Preserves renderer class names; derives colors, sizes and spacing from
+ * Lite theme.json, avoiding a second Gutenberg serializer.
+ * Experimental: visual/staging verification still required.
+ */
+:root,
+.editor-styles-wrapper {
+  --dlw-gutter: var(--wp--preset--spacing--3);
+  --dlw-content-narrow: 640px;
+  --dlw-content-standard: var(--wp--style--global--content-size, 720px);
+  --dlw-content-wide: var(--wp--style--global--wide-size, 1160px);
+}
+.wp-block-group.websign-section-spacing-none { padding-block: 0; }
+.wp-block-group.websign-section-spacing-compact { padding-block: var(--wp--preset--spacing--6); }
+.wp-block-group.websign-section-spacing-normal { padding-block: var(--wp--preset--spacing--10); }
+.wp-block-group.websign-section-spacing-spacious { padding-block: var(--wp--preset--spacing--16); }
+
+.wp-block-group.websign-section-background-surface {
+  background-color: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--on-surface);
+}
+.wp-block-group.websign-section-background-muted {
+  background-color: var(--wp--preset--color--surface-alt);
+  color: var(--wp--preset--color--on-surface);
+}
+.wp-block-group.websign-section-background-inverse {
+  background-color: var(--wp--preset--color--surface-inverse);
+  color: var(--wp--preset--color--on-inverse);
+}
+
+.wp-block-group.websign-container-width-narrow,
+.wp-block-group.websign-container-width-content,
+.wp-block-group.websign-container-width-wide {
+  box-sizing: border-box;
+  margin-inline: auto;
+  inline-size: 100%;
+  max-inline-size: calc(var(--dlw-container-limit) + var(--dlw-gutter) + var(--dlw-gutter));
+  padding-inline: var(--dlw-gutter);
+}
+.wp-block-group.websign-container-width-narrow { --dlw-container-limit: var(--dlw-content-narrow); }
+.wp-block-group.websign-container-width-content { --dlw-container-limit: var(--dlw-content-standard); }
+.wp-block-group.websign-container-width-wide { --dlw-container-limit: var(--dlw-content-wide); }
+.wp-block-group.websign-container-alignment-left { text-align: left; }
+.wp-block-group.websign-container-alignment-center { text-align: center; }
+
+.wp-block-columns.websign-columns-gap-compact { gap: var(--wp--preset--spacing--3); }
+.wp-block-columns.websign-columns-gap-normal { gap: var(--wp--preset--spacing--6); }
+.wp-block-columns.websign-columns-gap-spacious { gap: var(--wp--preset--spacing--10); }
+
+.wp-block-heading.websign-heading-role-display {
+  font-size: var(--wp--preset--font-size--5xl);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.wp-block-heading.websign-heading-role-section {
+  font-size: var(--wp--preset--font-size--3xl);
+  line-height: 1.1;
+}
+.wp-block-heading.websign-heading-role-subsection {
+  font-size: var(--wp--preset--font-size--xl);
+  line-height: 1.2;
+}
+p.websign-paragraph-role-body { line-height: 1.6; }
+p.websign-paragraph-role-lead {
+  font-size: var(--wp--preset--font-size--lg);
+  line-height: 1.65;
+}
+p.websign-paragraph-role-muted {
+  color: var(--wp--preset--color--on-surface-muted);
+  line-height: 1.6;
+}
+.websign-section-background-inverse p.websign-paragraph-role-muted {
+  color: var(--wp--preset--color--on-inverse-muted);
+}
+
+.wp-block-button.websign-button-style-primary .wp-block-button__link,
+.wp-block-button.websign-button-style-secondary .wp-block-button__link,
+.wp-block-button.websign-button-style-outline .wp-block-button__link {
+  padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+  border-radius: 2px;
+  text-decoration: none;
+  min-block-size: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.wp-block-button.websign-button-style-primary .wp-block-button__link {
+  color: var(--wp--preset--color--on-inverse);
+  background-color: var(--wp--preset--color--accent);
+}
+.wp-block-button.websign-button-style-secondary .wp-block-button__link {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--accent-surface);
+}
+.wp-block-button.websign-button-style-outline .wp-block-button__link {
+  color: inherit;
+  border: 1px solid currentColor;
+  background-color: transparent;
+}
+.websign-section-background-inverse .wp-block-button.websign-button-style-primary .wp-block-button__link {
+  color: var(--wp--preset--color--surface-inverse);
+  background-color: var(--wp--preset--color--on-inverse);
+}
+.websign-section-background-inverse .wp-block-button.websign-button-style-secondary .wp-block-button__link {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--accent-surface);
+}
+.wp-block-button.websign-button-style-primary .wp-block-button__link:focus-visible,
+.wp-block-button.websign-button-style-secondary .wp-block-button__link:focus-visible,
+.wp-block-button.websign-button-style-outline .wp-block-button__link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.websign-section-spacing-none,
+.websign-section-spacing-compact,
+.websign-section-spacing-normal,
+.websign-section-spacing-spacious,
+.websign-container-width-narrow,
+.websign-container-width-content,
+.websign-container-width-wide {
+  min-inline-size: 0;
+}
+.websign-section-background-inverse .wp-block-image {
+  margin: 0;
+}
+.websign-section-background-inverse .wp-block-image img {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+@media (max-width: 768px) {
+  :root,
+  .editor-styles-wrapper { --dlw-gutter: var(--wp--preset--spacing--2); }
+  .wp-block-group.websign-section-spacing-spacious { padding-block: var(--wp--preset--spacing--8); }
+  .wp-block-group.websign-section-spacing-normal { padding-block: var(--wp--preset--spacing--6); }
+  .wp-block-columns.websign-columns-gap-spacious { gap: var(--wp--preset--spacing--4); }
+}
+@media (max-width: 480px) {
+  :root,
+  .editor-styles-wrapper { --dlw-gutter: var(--wp--preset--spacing--2); }
+  .wp-block-group.websign-section-spacing-spacious { padding-block: var(--wp--preset--spacing--6); }
+  .wp-block-group.websign-section-spacing-compact { padding-block: var(--wp--preset--spacing--4); }
+}
