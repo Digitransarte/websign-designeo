@@ -104,6 +104,10 @@ class LiteDynamicBridgeTests(unittest.TestCase):
             self.skipTest("Local native Websign VNext renderer absent")
         from test_lite_site_document_selection_v01 import example_document
         document=example_document()
+        document["pages"][0]["nodes"][0]["spacing"]="spacious"
+        document["pages"][0]["nodes"][0]["background"]="inverse"
+        document["pages"][0]["nodes"][0]["children"][0]["role"]="display"
+        document["pages"][0]["nodes"][0]["children"][2]["style"]="primary"
         validate_site_document(document)
         rendered=render_site_document(document)
         classes=set(re.findall(r"websign-[a-z0-9-]+",rendered))
