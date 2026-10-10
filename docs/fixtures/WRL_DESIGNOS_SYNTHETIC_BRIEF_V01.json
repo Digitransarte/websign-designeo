@@ -1,0 +1,165 @@
+{
+  "briefing_kind": "research_evidence_discovery",
+  "format_version": "designos_wrl_briefing.v0.1",
+  "status": "draft_research_only",
+  "synthetic_input": true,
+  "sector_hypothesis": "Serviços de bem-estar (hipótese de estudo)",
+  "evidence_source": {
+    "research_ref": "WRL-RESEARCH-000009",
+    "source_version": "wrl_evidence.v0.1",
+    "source_schema_version": "0.2.2",
+    "exported_at": "2026-10-10T15:00:00+01:00",
+    "website_refs": [
+      "WRL-WEB-000007",
+      "WRL-WEB-000008"
+    ]
+  },
+  "sample_size": 2,
+  "analysis_coverage": {
+    "identidade_contexto": {
+      "analyzed": 2,
+      "partial": 0,
+      "not_analyzed": 0,
+      "total": 2
+    },
+    "arquitetura_informacao": {
+      "analyzed": 2,
+      "partial": 0,
+      "not_analyzed": 0,
+      "total": 2
+    },
+    "tecnologia_codigo": {
+      "analyzed": 2,
+      "partial": 0,
+      "not_analyzed": 0,
+      "total": 2
+    },
+    "seo": {
+      "analyzed": 2,
+      "partial": 0,
+      "not_analyzed": 0,
+      "total": 2
+    },
+    "acessibilidade": {
+      "analyzed": 2,
+      "partial": 0,
+      "not_analyzed": 0,
+      "total": 2
+    },
+    "conversao_confianca": {
+      "analyzed": 1,
+      "partial": 1,
+      "not_analyzed": 0,
+      "total": 2
+    }
+  },
+  "observations": {
+    "page_types": [
+      {
+        "feature": "home",
+        "present": 2,
+        "absent": 0,
+        "partial_unknown": 0,
+        "not_analyzed": 0,
+        "evidence_refs": [
+          "WRL-WEB-000007",
+          "WRL-WEB-000008"
+        ]
+      },
+      {
+        "feature": "service",
+        "present": 1,
+        "absent": 1,
+        "partial_unknown": 0,
+        "not_analyzed": 0,
+        "evidence_refs": [
+          "WRL-WEB-000007"
+        ]
+      }
+    ],
+    "conversion_features": [
+      {
+        "feature": "commercial_cta",
+        "present": 1,
+        "absent": 0,
+        "partial_unknown": 1,
+        "not_analyzed": 0,
+        "evidence_refs": [
+          "WRL-WEB-000007"
+        ]
+      },
+      {
+        "feature": "quote_request",
+        "present": 0,
+        "absent": 1,
+        "partial_unknown": 1,
+        "not_analyzed": 0,
+        "evidence_refs": []
+      }
+    ],
+    "quality_indicators": [
+      {
+        "feature": "missing_h1",
+        "present": 1,
+        "absent": 1,
+        "partial_unknown": 0,
+        "not_analyzed": 0,
+        "evidence_refs": [
+          "WRL-WEB-000008"
+        ]
+      }
+    ],
+    "technologies": [
+      {
+        "technology": "WordPress",
+        "websites_observed": 2
+      }
+    ]
+  },
+  "research_questions": [
+    {
+      "question": "Que hierarquia e navegação originais servem a página inicial?",
+      "supporting_evidence_refs": [
+        "WRL-WEB-000007",
+        "WRL-WEB-000008"
+      ],
+      "basis": "observed_in_sample_not_a_design_requirement"
+    },
+    {
+      "question": "Como organizar serviços em componentes próprios e reutilizáveis?",
+      "supporting_evidence_refs": [
+        "WRL-WEB-000007"
+      ],
+      "basis": "observed_in_sample_not_a_design_requirement"
+    },
+    {
+      "question": "Que CTA original é justificável pelo briefing do cliente?",
+      "supporting_evidence_refs": [
+        "WRL-WEB-000007"
+      ],
+      "basis": "observed_in_sample_not_a_design_requirement"
+    },
+    {
+      "question": "Que regra de QA evita estruturas de headings incorretas?",
+      "supporting_evidence_refs": [
+        "WRL-WEB-000008"
+      ],
+      "basis": "observed_in_sample_not_a_design_requirement"
+    }
+  ],
+  "design_hypotheses": [],
+  "approved_design_decisions": [],
+  "unknowns": [
+    "O corpus é fictício e não constitui pesquisa de mercado real",
+    "As observações não provam eficácia, conversão nem adequação ao cliente",
+    "A existência de componentes noutros sites não autoriza cópia",
+    "Definir identidade, público e objetivos num briefing próprio antes do design"
+  ],
+  "handoff": {
+    "next_owner": "DesignOS",
+    "target_stage": "discovery",
+    "generation_allowed": false,
+    "human_review_required": true
+  },
+  "commercial_actions_authorized": false
+}
