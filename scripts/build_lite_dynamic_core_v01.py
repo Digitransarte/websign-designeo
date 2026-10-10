@@ -41,7 +41,7 @@ REQUIRED_STYLES = frozenset({
     "websign-button-style-outline",
 })
 WP_VARIABLE = re.compile(r"var\(\s*(--wp--preset--(color|font-size|spacing|font-family)--([a-z0-9-]+))")
-CSS_CLASS = re.compile(r"(?<![a-zA-Z0-9_-])\.(websign-[a-z0-9_-]+)")
+CSS_CLASS = re.compile(r"\.(websign-[a-z0-9_-]+)")
 CSS_DECLARATION = re.compile(r"(?<![a-zA-Z0-9_-])(--dlw-[a-z0-9_-]+)\s*:")
 CSS_USE = re.compile(r"var\(\s*(--dlw-[a-z0-9_-]+)")
 
