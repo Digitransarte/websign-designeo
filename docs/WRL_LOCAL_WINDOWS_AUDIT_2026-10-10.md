@@ -56,3 +56,17 @@ Mapear inicialmente os grupos já existentes `corpus`, `technologies`, `architec
 5. **Só então WEB-02:** usar a informação no Designeo Base (tokens/patterns), continuando Websign como responsável por Gutenberg/Elementor.
 
 **Bloqueios:** não criar um novo UI de research, scraper, agente de pesquisa ou serviço Docker antes destes gates. Nenhuma operação no site de cliente, em produção WordPress ou no hosting está autorizada por esta auditoria.
+
+## 5. Validação executada e preservação local — atualização de 10/10/2026
+
+Depois da auditoria inicial, **o backup e os testes foram realizados** no dispositivo Windows `NPC`:
+
+- Snapshot privado `C:\projetos\WRL-Safe-Backups\WRL_2026-10-10_snapshot_01`, com `921` ficheiros e `98 601 044` bytes. Preserva `.git`, código tracked/untracked, testes, frontend, HTML e screenshots; exclui `.venv` regenerável, caches e `*.pyc`.
+- `data/website-research.db` foi preservada por **SQLite backup API** (origem aberta em leitura). O arquivo destino passou `PRAGMA quick_check = ok`, com **5 registos websites, 1 pesquisa temática, 5 vínculos pesquisa→website**.
+- Manifesto privado `manifest.json` contém hashes SHA-256 dos ficheiros e metadados para comparação. Não publicar nem sincronizar este snapshot bruto com GitHub.
+- A cópia de validação `C:\projetos\WRL-Safe-Backups\WRL_validation_2026-10-10_01` foi derivada do snapshot, **sem a base real**; suite original `152 passed` (exit 0, 2,29 s).
+- Nessa mesma cópia, protótipo `evidence_export.py` e 20 testes novos → **172 passed** (exit 0, 2,15 s).
+- Código exportador puro em PR Draft [Websign #1](https://github.com/Digitransarte/websign-designeo/pull/1), com esquema [EvidencePackage v0.1](../../blob/feature/wrl-evidence-package-v01-20261010/docs/WRL_EVIDENCE_EXPORT_CONTRACT_V01.md). Os **8 testes unitários independentes da PR passaram** num segundo workspace isolado (exit 0).
+- Nenhuma captura de sites, execução de LLM, mudança do WRL original, deploy, commit de código confidencial ou migração de dados.
+
+**Limites em aberto:** a cópia está no mesmo computador Windows (não substitui backup externo encriptado); a PR ainda não integra WRL/DesignOS em tempo de execução. Próximo gate: revisão do contrato, aprovação para integração e teste de intercâmbio JSON sintético antes de qualquer uso com pesquisas reais.
