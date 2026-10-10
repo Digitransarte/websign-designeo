@@ -24,6 +24,16 @@ Venture OS → consulta os componentes prontos e mede reutilização, custo e pr
 Venture OS NÃO é o owner dos templates nem da infraestrutura de hosting.
 ```
 
+## Definições de templates — decisão de 10/10/2026
+
+**Designeo Base** é a **fundação técnica e de design** partilhada (tokens, estilos, componentes, arquitetura de conteúdo, QA e adaptadores WordPress). Não é, por si, um modelo de website para vender.
+
+**Designeo Lite** é a **versão mínima de um template de website**, com os elementos essenciais e sem funcionalidades ou composição excessiva. Os vários modelos por área de atividade deverão assentar nesta abordagem Lite, reutilizando a fundação técnica comum, mas adaptando estrutura e linguagem à função de cada setor. O âmbito exato do mínimo será estabelecido depois da auditoria aos ZIPs Lite existentes, não inferido antecipadamente.
+
+**Designeo Elite** **não integra este programa de templates**. Não criar uma linha Elite, não usar Elite como dependência e não conduzir auditoria de Elite para avançar o WEB-01; o nome não deve aparecer como alternativa à fundação Lite.
+
+O **Websign/Site Studio** é o motor de composição/edição/publicação, e a infraestrutura Hetzner/CloudPanel mantém WordPress. Assim, separar sempre *fundação técnica* (Base), *produto/template mínimo* (Lite) e *modelo por setor* (variação do Lite).
+
 ## Research — reutilizar Website Research Lab (WRL)
 
 **Aplicação existente, agora localizada e inspecionada no Windows (NPC) em 2026-10-10.** Local conhecido: `C:\\projetos\\WebsiteResearchLab-MVP-0.1\\WebsiteResearchLab` (Windows local; não foi encontrado repositório WRL entre os GitHub acessíveis). A documentação no workspace atual identifica a **v0.5.0** (inclui pesquisas temáticas e comparação factual multiwebsite); 110 testes tinham sido reportados historicamente, **não reexecutados nesta auditoria**. FastAPI/SQLite/Jinja/Playwright, capturas desktop/mobile, extração de HTML/DOM/CSS e metadados, análise de estrutura visual/layouts/componentes/SEO/acessibilidade e crawler multipágina controlado (limites típicos 25 páginas/profundidade 2). Não assumir que estes testes passaram recentemente, nem que a integração Websign existe.
@@ -54,7 +64,7 @@ Sites e referências selecionados
 
 **Fontes verificadas:** `Digitransarte/websign-designeo` tem `gutenberg.py` com builders de blocos e secções, `app.py`, dados multi-cliente, testes HTML de baseline e `Templates/designeo-lite-v1.1.zip`, `v2.0.zip`, `v2.0.1.zip`. `Digitransarte/design-os` é o owner do fluxo de design e brand workflow. `Digitransarte/designeo-studio` tem templates de **entregáveis de serviços**, distintos de templates de websites. Não os confundir.
 
-**Inventário a confirmar:** Websign/Site Studio, Designeo Lite, Designeo Elite, `bhconv` HTML→WordPress, Design System/Brand Kit (tokens, tipografia, componentes), contratos dos agentes, código de integração WordPress via Application Passwords, case studies/site Designeo (atualmente Elementor) e Casa Bhumi como caso futuro Gutenberg. Não afirmar que as conversões e pipelines já estão prontas para clientes sem testar.
+**Inventário a confirmar:** Websign/Site Studio, versões existentes do **Designeo Lite** (templates mínimos), `bhconv` HTML→WordPress, Design System/Brand Kit (tokens, tipografia, componentes), contratos dos agentes, código de integração WordPress via Application Passwords, case studies/site Designeo (atualmente Elementor) e Casa Bhumi como caso futuro Gutenberg. Não afirmar que as conversões e pipelines já estão prontas para clientes sem testar.
 
 **Hosting existente, observado sem alterações:** CloudPanel presente no servidor Hetzner; Nginx, MariaDB, PHP 8.2/8.3 em execução; WP-CLI 2.12.0 no PATH. **Isto não é prova** de hosting gerido para múltiplos clientes pronto. Auditoria operacional necessária antes de novos sites reais.
 
@@ -67,15 +77,15 @@ Sites e referências selecionados
 - Verificar “o que já corre”, “o que apenas compila”, “o que ainda falta”, em matriz com provas.
 - **Done:** inventário concreto, sem soluções redundantes nem novos serviços.
 
-### WEB-02 — Designeo Base (fundação única de templates)
-- Consolidar tokens visuais, `theme.json`, tipografia, grid, espaçamentos, componentes repetíveis, templates e patterns Gutenberg.
+### WEB-02 — Designeo Base (fundação comum) + Designeo Lite (template mínimo)
+- Consolidar tokens visuais, `theme.json`, tipografia, grid, espaçamentos e componentes repetíveis na fundação técnica **Designeo Base**. Recuperar e avaliar as versões **Designeo Lite v1.1/v2.0/v2.0.1** como templates mínimos a partir dessa fundação, preservando apenas o que estiver tecnicamente validado.
 - Definir `SiteDocument`/esquema canónico versionado: contents, sections, slots, visual tokens, responsive, assets, source provenance.
 - Desenhar os adaptadores: Gutenberg para nova produção; Elementor para suporte/serviço e migrações, sem forçar reconstrução de sites Elementor que funcionam.
 - Incorporar QA visual, responsivo, acessibilidade, update/diff e rollback.
-- **Done:** um template-base neutro editável/importável num WP sandbox, publicado apenas como **rascunho interno**, com teste de round-trip e comparação/QA. Não precisa ser produto vendável.
+- **Done:** um **Designeo Lite mínimo** neutro, editável/importável num WP sandbox e guardado apenas como **rascunho interno**, com teste de round-trip e comparação/QA. Não precisa ser produto vendável.
 
-### WEB-03 — Modelos por área
-- Um modelo canónico + variações de páginas, módulos e linguagem por setor, **sem copiar projetos de clientes**.
+### WEB-03 — Modelos Designeo Lite por área
+- Várias versões setoriais **Designeo Lite** (modelos de website mínimos, com estrutura e linguagem adequadas ao setor), reutilizando a **Designeo Base**. Não criar templates Elite nem copiar projetos de clientes.
 - Primeiras hipóteses: **serviços profissionais** (neutro), **bem-estar/yoga** (referência funcional futura Casa Bhumi), **indústria/oficinas** (candidata serralharia).
 - Separar componentes comuns do setor, conteúdos de exemplo e alterações de identidade visual.
 - **Done:** pelo menos duas variações testadas no mesmo motor, com medição de reutilização e esforço humano.
@@ -106,4 +116,4 @@ Sites e referências selecionados
 - Credenciais e dados reais de sites WP, CloudPanel e WordPress não devem entrar em GitHub, fixtures ou documentação pública.
 - Todas as mudanças com risco de produção exigem plano de backup, restauro testado, QA/rollback e aprovação separada.
 
-**Primeira execução proposta:** WEB-01, inventariando concretamente Websign Designeo Lite/Elite, Gutenberg e publicação antes de construir um Hero ou template novo.
+**Primeira execução proposta:** WEB-01, inventariando concretamente **Websign e as versões existentes de Designeo Lite**, Gutenberg e publicação antes de construir um Hero ou template novo. **Elite fora de escopo.**
