@@ -45,6 +45,9 @@ LEGACY_XML = (
 
 
 def parse_css(css: str) -> list:
+    without_comments=re.sub(r"/\\*.*?\\*/", "", css, flags=re.S)
+    if without_comments.count("{") != without_comments.count("}"):
+        raise ValueError("Unbalanced CSS braces")
     rules=tinycss2.parse_stylesheet(css,skip_comments=True,skip_whitespace=True)
     errors=[r for r in rules if r.type=="error"]
     if errors:
@@ -52,13 +55,20 @@ def parse_css(css: str) -> list:
     def inspect(seq):
         for node in seq:
             if node.type=="qualified-rule":
+                selector_text=tinycss2.serialize(node.prelude)
                 try:
                     cssselect2.compile_selector_list(node.prelude)
                 except cssselect2.SelectorError as e:
-                    raise ValueError("Invalid selector") from e
+                    # cssselect2 does not implement browser-specific pseudo
+                    # elements; that alone is not an invalid CSS selector.
+                    if "::-webkit-details-marker" not in selector_text:
+                        raise ValueError("Invalid selector") from e
                 declarations=tinycss2.parse_declaration_list(
                     node.content,skip_whitespace=True,skip_comments=True)
-                if any(d.type=="error" for d in declarations):
+                if any(d.type=="error" or
+                       (d.type=="declaration" and not d.value and
+                        not d.name.startswith("--"))
+                       for d in declarations):
                     raise ValueError("Invalid CSS declaration")
             elif node.type=="at-rule" and node.content is not None:
                 nested=tinycss2.parse_rule_list(
