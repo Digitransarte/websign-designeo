@@ -103,6 +103,14 @@ function add_action($hook, $callback, $priority = 10) {
 function add_filter($h, $c, $p = 10) {}
 function remove_action($h, $c, $p = 10) {}
 function remove_filter($h, $c, $p = 10) {}
+function wp_get_theme() {
+    return new class { function get($name) { return '2.0.1'; } };
+}
+function get_template_directory_uri() { return 'http://localhost/synthetic'; }
+function wp_enqueue_style($handle, $uri, $deps = [], $version = null) {
+    $GLOBALS['enqueued'][] = $handle;
+}
+function wp_enqueue_script($handle, $uri, $deps = [], $version = null, $args = []) {}
 function wp_dequeue_style($handle) {
     $GLOBALS['enqueued'] = array_values(array_filter(
         $GLOBALS['enqueued'], fn($h) => $h !== $handle
