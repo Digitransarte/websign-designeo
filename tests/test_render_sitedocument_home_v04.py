@@ -9,7 +9,13 @@ class HomeTests(unittest.TestCase):
   x=render_home(D)
   for token in ('wp:group','wp:heading','wp:paragraph','wp:columns','wp:column','wp:button'):
    self.assertIn(token,x)
-  self.assertEqual(x.count('<!-- wp:heading {"level":1} -->'),1)
+  self.assertEqual(x.count('<!-- wp:heading {"level":1,"fontSize":"5xl"} -->'),1)
+  self.assertEqual(x.count('"fontSize":"3xl"'),2)
+  self.assertIn('"fontSize":"lg"',x)
+  self.assertEqual(x.count('"className":"dl-overline"'),2)
+  self.assertIn('"textColor":"on-inverse"',x)
+  self.assertIn('"backgroundColor":"on-inverse","textColor":"surface-inverse"',x)
+  self.assertIn('has-surface-inverse-color has-text-color',x)
   self.assertIn('id="servicos"',x)
   self.assertNotIn('wp:html',x)
  def test_invalid_url_rejected(self):
