@@ -11,20 +11,38 @@ from scripts.render_sitedocument_gutenberg_v01 import _text, _url
 SCHEMA = "designeo.site-document.v0.4"
 
 
-def _paragraph(text: str) -> str:
-    return f'<!-- wp:paragraph -->\n<p>{_text(text)}</p>\n<!-- /wp:paragraph -->'
+def _paragraph(text: str, *, role: str = "normal") -> str:
+    if role not in ("normal", "eyebrow", "lead", "inverse"):
+        raise ValueError("Unsupported paragraph role")
+    attr = {"eyebrow": {"className": "dl-overline"}, "lead": {"fontSize": "lg"}, "inverse": {"textColor": "on-inverse"}, "normal": {}}[role]
+    classes = {"normal": "", "eyebrow": "dl-overline", "lead": "has-lg-font-size", "inverse": "has-on-inverse-color has-text-color"}[role]
+    comment = " " + json.dumps(attr, ensure_ascii=False, separators=(",", ":")) if attr else ""
+    cls = f' class="{classes}"' if classes else ""
+    return f'<!-- wp:paragraph{comment} -->\n<p{cls}>{_text(text)}</p>\n<!-- /wp:paragraph -->'
 
 
-def _heading(level: int, text: str) -> str:
-    t = _text(text, 200)
-    return f'<!-- wp:heading {{"level":{level}}} -->\n<h{level} class="wp-block-heading">{t}</h{level}>\n<!-- /wp:heading -->'
+def _heading(level: int, text: str, *, inverse: bool = False) -> str:
+    attrs = {"level": level}
+    if level in (1, 2):
+        attrs["fontSize"] = "5xl" if level == 1 else "3xl"
+    if inverse:
+        attrs["textColor"] = "on-inverse"
+    classes = ["wp-block-heading"]
+    if "fontSize" in attrs:
+        classes.append("has-" + attrs["fontSize"].replace("xl", "-xl") + "-font-size")
+    if inverse:
+        classes += ["has-on-inverse-color", "has-text-color"]
+    attr_json = json.dumps(attrs, separators=(",", ":"))
+    return f'<!-- wp:heading {attr_json} -->\n<h{level} class="{" ".join(classes)}">{_text(text, 200)}</h{level}>\n<!-- /wp:heading -->'
 
 
-def _button(label: str, url: str) -> str:
-    t,u=_text(label,100),_url(url)
+def _button(label: str, url: str, *, inverse: bool = False) -> str:
+    t, u = _text(label, 100), _url(url)
+    attrs = ' {"backgroundColor":"on-inverse","textColor":"surface-inverse"}' if inverse else ""
+    cls = " has-on-inverse-background-color has-background has-surface-inverse-color has-text-color" if inverse else ""
     return ('<!-- wp:buttons -->\n<div class="wp-block-buttons">\n'
-            '<!-- wp:button -->\n<div class="wp-block-button">'
-            f'<a class="wp-block-button__link wp-element-button" href="{u}">{t}</a>'
+            f'<!-- wp:button{attrs} -->\n<div class="wp-block-button">'
+            f'<a class="wp-block-button__link wp-element-button{cls}" href="{u}">{t}</a>'
             '</div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->')
 
 
@@ -65,7 +83,7 @@ def render_home(document: object) -> str:
             raise ValueError("Invalid service")
         cols.append('<!-- wp:column -->\n<div class="wp-block-column">\n'+_heading(3,item["title"])+'\n'+_paragraph(item["body"])+'\n</div>\n<!-- /wp:column -->')
     columns='<!-- wp:columns -->\n<div class="wp-block-columns">\n'+'\n'.join(cols)+'\n</div>\n<!-- /wp:columns -->'
-    a=_group(_paragraph(hero["eyebrow"])+'\n'+_heading(1,hero["title"])+'\n'+_paragraph(hero["body"])+'\n'+_button(**hero["button"]),background="surface",component="dl-hero")
-    b=_group(_paragraph(services["eyebrow"])+'\n'+_heading(2,services["title"])+'\n'+columns,anchor="servicos",background="surface-alt",component="dl-services")
-    c=_group(_heading(2,cta["title"])+'\n'+_paragraph(cta["body"])+'\n'+_button(**cta["button"]),anchor="sobre",background="surface-inverse",component="dl-cta")
+    a=_group(_paragraph(hero["eyebrow"], role="eyebrow")+'\n'+_heading(1,hero["title"])+'\n'+_paragraph(hero["body"], role="lead")+'\n'+_button(**hero["button"]),background="surface",component="dl-hero")
+    b=_group(_paragraph(services["eyebrow"], role="eyebrow")+'\n'+_heading(2,services["title"])+'\n'+columns,anchor="servicos",background="surface-alt",component="dl-services")
+    c=_group(_heading(2,cta["title"], inverse=True)+'\n'+_paragraph(cta["body"], role="inverse")+'\n'+_button(**cta["button"], inverse=True),anchor="sobre",background="surface-inverse",component="dl-cta")
     return '\n\n'.join((a,b,c))+'\n'
