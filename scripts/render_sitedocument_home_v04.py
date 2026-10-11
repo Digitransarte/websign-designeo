@@ -28,14 +28,17 @@ def _button(label: str, url: str) -> str:
             '</div>\n<!-- /wp:button -->\n</div>\n<!-- /wp:buttons -->')
 
 
-def _group(body: str, *, anchor: str = "", background: str = "surface") -> str:
+def _group(body: str, *, anchor: str = "", background: str = "surface", component: str = "") -> str:
     if background not in ("surface","surface-alt","surface-inverse"):
         raise ValueError("Unknown background token")
+    if component not in ("", "dl-hero", "dl-services", "dl-cta"):
+        raise ValueError("Unknown component")
+    classes = "dl-section" + (" " + component if component else "")
     anchor_attr = f',"anchor":"{anchor}"' if anchor else ""
     params = '{"align":"full","backgroundColor":"' + background + '","className":"dl-section"' + anchor_attr + ',"layout":{"type":"constrained"}}'
     anchor_html = f' id="{anchor}"' if anchor else ""
     return (f'<!-- wp:group {params} -->\n'
-            f'<div class="wp-block-group alignfull dl-section has-{background}-background-color has-background"{anchor_html}>\n'
+            f'<div class="wp-block-group alignfull {classes} has-{background}-background-color has-background"{anchor_html}>\n'
             +body+'\n</div>\n<!-- /wp:group -->')
 
 
@@ -62,7 +65,7 @@ def render_home(document: object) -> str:
             raise ValueError("Invalid service")
         cols.append('<!-- wp:column -->\n<div class="wp-block-column">\n'+_heading(3,item["title"])+'\n'+_paragraph(item["body"])+'\n</div>\n<!-- /wp:column -->')
     columns='<!-- wp:columns -->\n<div class="wp-block-columns">\n'+'\n'.join(cols)+'\n</div>\n<!-- /wp:columns -->'
-    a=_group(_paragraph(hero["eyebrow"])+'\n'+_heading(1,hero["title"])+'\n'+_paragraph(hero["body"])+'\n'+_button(**hero["button"]),background="surface")
-    b=_group(_paragraph(services["eyebrow"])+'\n'+_heading(2,services["title"])+'\n'+columns,anchor="servicos",background="surface-alt")
-    c=_group(_heading(2,cta["title"])+'\n'+_paragraph(cta["body"])+'\n'+_button(**cta["button"]),anchor="sobre",background="surface-inverse")
+    a=_group(_paragraph(hero["eyebrow"])+'\n'+_heading(1,hero["title"])+'\n'+_paragraph(hero["body"])+'\n'+_button(**hero["button"]),background="surface",component="dl-hero")
+    b=_group(_paragraph(services["eyebrow"])+'\n'+_heading(2,services["title"])+'\n'+columns,anchor="servicos",background="surface-alt",component="dl-services")
+    c=_group(_heading(2,cta["title"])+'\n'+_paragraph(cta["body"])+'\n'+_button(**cta["button"]),anchor="sobre",background="surface-inverse",component="dl-cta")
     return '\n\n'.join((a,b,c))+'\n'
