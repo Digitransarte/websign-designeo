@@ -38,8 +38,8 @@ def _heading(level: int, text: str, *, inverse: bool = False) -> str:
 
 def _button(label: str, url: str, *, inverse: bool = False) -> str:
     t, u = _text(label, 100), _url(url)
-    attrs = ' {"backgroundColor":"on-inverse","textColor":"surface-inverse"}' if inverse else ""
-    cls = " has-on-inverse-background-color has-background has-surface-inverse-color has-text-color" if inverse else ""
+    attrs = ' {"backgroundColor":"on-inverse","textColor":"surface-inverse"}' if inverse else ' {"backgroundColor":"surface-inverse","textColor":"on-inverse"}'
+    cls = " has-on-inverse-background-color has-background has-surface-inverse-color has-text-color" if inverse else " has-surface-inverse-background-color has-background has-on-inverse-color has-text-color"
     return ('<!-- wp:buttons -->\n<div class="wp-block-buttons">\n'
             f'<!-- wp:button{attrs} -->\n<div class="wp-block-button">'
             f'<a class="wp-block-button__link wp-element-button{cls}" href="{u}">{t}</a>'
