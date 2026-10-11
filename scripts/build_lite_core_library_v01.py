@@ -15,6 +15,7 @@ import tempfile
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 from scripts.build_lite_v201_token_aligned_candidate import build as build_normalized
+from scripts.lite_render_contract_v01 import apply_render_contract
 
 ROOT = "designeo-lite-base/"
 LIBRARY_ROOT = "designeo-lite-pattern-library/"
@@ -98,7 +99,7 @@ def build_packages(repo: Path, core_output: Path, library_output: Path) -> dict:
     wanted = {f"{ROOT}patterns/{name}.php" for name in ALLOWED}
     if set(patterns) != wanted:
         raise ValueError("Unknown/missing patterns: manual review required")
-    core = {k: v for k, v in items.items() if k not in patterns}
+    core = apply_render_contract({k: v for k, v in items.items() if k not in patterns})
     essential = {"style.css", "functions.php", "theme.json", "index.php",
                  "templates/index.html", "templates/page.html",
                  "parts/header.html", "parts/footer.html"}
