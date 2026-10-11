@@ -35,7 +35,7 @@ def _group(body: str, *, anchor: str = "", background: str = "surface", componen
         raise ValueError("Unknown component")
     classes = "dl-section" + (" " + component if component else "")
     anchor_attr = f',"anchor":"{anchor}"' if anchor else ""
-    params = '{"align":"full","backgroundColor":"' + background + '","className":"dl-section"' + anchor_attr + ',"layout":{"type":"constrained"}}'
+    params = '{"align":"full","backgroundColor":"' + background + f'","className":"{classes}"' + anchor_attr + ',"layout":{"type":"constrained"}}'
     anchor_html = f' id="{anchor}"' if anchor else ""
     return (f'<!-- wp:group {params} -->\n'
             f'<div class="wp-block-group alignfull {classes} has-{background}-background-color has-background"{anchor_html}>\n'
