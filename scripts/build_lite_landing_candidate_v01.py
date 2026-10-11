@@ -6,7 +6,9 @@ applies the native landing contract without changing the stable core builder.
 import argparse
 import json
 import tempfile
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.build_lite_core_library_v01 import build_packages, _load, _zip, ROOT
 from scripts.lite_landing_contract_v01 import apply_landing_contract
 
