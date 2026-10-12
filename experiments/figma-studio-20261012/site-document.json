@@ -1,0 +1,633 @@
+{
+  "schema_version": "websign.site.v0.1",
+  "site_id": "designeo-studio-figma-pilot-20261012",
+  "source": {
+    "design_url": "https://www.figma.com/design/lC0PI3RGoX8SNuF7aOutKS",
+    "desktop_node": "2:2",
+    "mobile_node": "3:2",
+    "status": "user approved prototype transfer as test"
+  },
+  "pages": [
+    {
+      "id": "home-pilot",
+      "slug": "designeo-studio-figma",
+      "title": "Designeo Studio — Estudo Figma → Gutenberg",
+      "nodes": [
+        {
+          "id": "header",
+          "type": "section",
+          "spacing": "compact",
+          "background": "surface",
+          "children": [
+            {
+              "id": "header-container",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "header-columns",
+                  "type": "columns",
+                  "gap": "spacious",
+                  "children": [
+                    {
+                      "id": "header-columns-left",
+                      "type": "column",
+                      "children": [
+                        {
+                          "id": "brand",
+                          "type": "paragraph",
+                          "text": "DESIGNEO",
+                          "role": "lead",
+                          "figma_node": "2:3"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "header-columns-right",
+                      "type": "column",
+                      "children": [
+                        {
+                          "id": "menu-studio",
+                          "type": "button",
+                          "label": "ESTÚDIO",
+                          "url": "#dps-hero",
+                          "style": "secondary"
+                        },
+                        {
+                          "id": "menu-services",
+                          "type": "button",
+                          "label": "SERVIÇOS",
+                          "url": "#dps-services",
+                          "style": "secondary"
+                        },
+                        {
+                          "id": "menu-projects",
+                          "type": "button",
+                          "label": "PROJETOS",
+                          "url": "#dps-exercise",
+                          "style": "secondary"
+                        },
+                        {
+                          "id": "menu-contact",
+                          "type": "button",
+                          "label": "FALAR DE UM PROJETO ↗",
+                          "url": "#dps-contact",
+                          "style": "primary"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hero",
+          "type": "section",
+          "spacing": "spacious",
+          "background": "surface",
+          "children": [
+            {
+              "id": "hero-container",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "hero-columns",
+                  "type": "columns",
+                  "gap": "spacious",
+                  "children": [
+                    {
+                      "id": "hero-columns-left",
+                      "type": "column",
+                      "children": [
+                        {
+                          "id": "hero-index",
+                          "type": "paragraph",
+                          "text": "DESIGNEO STUDIO   /   01",
+                          "role": "muted",
+                          "figma_node": "2:11"
+                        },
+                        {
+                          "id": "hero-heading",
+                          "type": "heading",
+                          "text": "Design, web\n& produção\ngráfica.",
+                          "level": 1,
+                          "role": "display",
+                          "figma_node": "2:12"
+                        },
+                        {
+                          "id": "hero-kicker",
+                          "type": "paragraph",
+                          "text": "Pensados em conjunto.",
+                          "role": "lead",
+                          "figma_node": "2:14"
+                        },
+                        {
+                          "id": "hero-desc",
+                          "type": "paragraph",
+                          "text": "Do primeiro conceito à presença digital e ao objeto físico.\nUma linguagem, vários pontos de contacto.",
+                          "role": "body",
+                          "figma_node": "2:15"
+                        },
+                        {
+                          "id": "hero-primary",
+                          "type": "button",
+                          "label": "EXPLORAR O TRABALHO ↗",
+                          "url": "#dps-exercise",
+                          "style": "primary"
+                        },
+                        {
+                          "id": "hero-secondary",
+                          "type": "button",
+                          "label": "O NOSSO PROCESSO ↗",
+                          "url": "#dps-method",
+                          "style": "outline"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "hero-columns-right",
+                      "type": "column",
+                      "children": [
+                        {
+                          "id": "diagram-index",
+                          "type": "paragraph",
+                          "text": "ESTRUTURA  /  MARCA  /  SUPORTE",
+                          "role": "muted",
+                          "figma_node": "2:21"
+                        },
+                        {
+                          "id": "diagram-display",
+                          "type": "heading",
+                          "text": "D   01",
+                          "level": 2,
+                          "role": "display",
+                          "figma_node": "2:25"
+                        },
+                        {
+                          "id": "diagram-legends",
+                          "type": "paragraph",
+                          "text": "01 / IDENTIDADE      02 / WEB      03 / PRINT",
+                          "role": "muted",
+                          "figma_node": "2:28"
+                        },
+                        {
+                          "id": "diagram-footer",
+                          "type": "paragraph",
+                          "text": "SISTEMA DE COMUNICAÇÃO",
+                          "role": "muted",
+                          "figma_node": "2:31"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "services",
+          "type": "section",
+          "spacing": "normal",
+          "background": "surface",
+          "children": [
+            {
+              "id": "services-intro",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "services-index",
+                  "type": "paragraph",
+                  "text": "02   /   DISCIPLINAS INTEGRADAS",
+                  "role": "muted",
+                  "figma_node": "2:33"
+                },
+                {
+                  "id": "services-title",
+                  "type": "heading",
+                  "text": "Três competências.\nUma direção.",
+                  "level": 2,
+                  "role": "section",
+                  "figma_node": "2:34"
+                },
+                {
+                  "id": "services-lead",
+                  "type": "paragraph",
+                  "text": "A estratégia e a expressão acompanham cada peça,\nindependentemente do meio.",
+                  "role": "lead",
+                  "figma_node": "2:35"
+                }
+              ]
+            },
+            {
+              "id": "services-brand",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "services-num-1",
+                  "type": "paragraph",
+                  "text": "01  ↗",
+                  "role": "muted",
+                  "figma_node": "2:37"
+                },
+                {
+                  "id": "services-heading-1",
+                  "type": "heading",
+                  "text": "Identidade",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:38"
+                },
+                {
+                  "id": "services-desc-1",
+                  "type": "paragraph",
+                  "text": "Marcas com fundamento,\nlinguagem e reconhecimento.",
+                  "role": "body",
+                  "figma_node": "2:39"
+                }
+              ]
+            },
+            {
+              "id": "services-web",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "services-num-2",
+                  "type": "paragraph",
+                  "text": "02  ↗",
+                  "role": "muted",
+                  "figma_node": "2:41"
+                },
+                {
+                  "id": "services-heading-2",
+                  "type": "heading",
+                  "text": "Web",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:42"
+                },
+                {
+                  "id": "services-desc-2",
+                  "type": "paragraph",
+                  "text": "Experiências digitais com\nclareza, ritmo e intenção.",
+                  "role": "body",
+                  "figma_node": "2:43"
+                }
+              ]
+            },
+            {
+              "id": "services-production",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "services-num-3",
+                  "type": "paragraph",
+                  "text": "03  ↗",
+                  "role": "muted",
+                  "figma_node": "2:45"
+                },
+                {
+                  "id": "services-heading-3",
+                  "type": "heading",
+                  "text": "Produção",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:46"
+                },
+                {
+                  "id": "services-desc-3",
+                  "type": "paragraph",
+                  "text": "Design que chega ao papel,\nao tecido e ao espaço.",
+                  "role": "body",
+                  "figma_node": "2:47"
+                }
+              ]
+            },
+            {
+              "id": "services-note",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "services-overall",
+                  "type": "paragraph",
+                  "text": "NÃO SÃO DEPARTAMENTOS. SÃO PARTE DO MESMO PROCESSO.",
+                  "role": "muted",
+                  "figma_node": "2:48"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "exercise",
+          "type": "section",
+          "spacing": "spacious",
+          "background": "inverse",
+          "children": [
+            {
+              "id": "exercise-intro",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "exercise-index",
+                  "type": "paragraph",
+                  "text": "03   /   DO CONCEITO AO OBJETO",
+                  "role": "muted",
+                  "figma_node": "2:50"
+                },
+                {
+                  "id": "exercise-title",
+                  "type": "heading",
+                  "text": "Uma ideia.\nVárias expressões.",
+                  "level": 2,
+                  "role": "section",
+                  "figma_node": "2:51"
+                },
+                {
+                  "id": "exercise-note",
+                  "type": "paragraph",
+                  "text": "ESTUDO GRÁFICO CONCEPTUAL — NÃO É UM TRABALHO DE CLIENTE",
+                  "role": "muted",
+                  "figma_node": "2:52"
+                }
+              ]
+            },
+            {
+              "id": "exercise-brand",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "exercise-AA",
+                  "type": "heading",
+                  "text": "Aa",
+                  "level": 3,
+                  "role": "display",
+                  "figma_node": "2:56"
+                },
+                {
+                  "id": "exercise-brand-label",
+                  "type": "paragraph",
+                  "text": "01    FORMA / VOZ",
+                  "role": "muted",
+                  "figma_node": "2:57"
+                }
+              ]
+            },
+            {
+              "id": "exercise-web",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "exercise-wireframe",
+                  "type": "heading",
+                  "text": "WEB / UI",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:58"
+                },
+                {
+                  "id": "exercise-web-label",
+                  "type": "paragraph",
+                  "text": "02    ESTRUTURA / UI",
+                  "role": "muted",
+                  "figma_node": "2:67"
+                }
+              ]
+            },
+            {
+              "id": "exercise-print",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "exercise-print-shapes",
+                  "type": "heading",
+                  "text": "|||||||||",
+                  "level": 3,
+                  "role": "display",
+                  "figma_node": "2:68"
+                },
+                {
+                  "id": "exercise-print-label",
+                  "type": "paragraph",
+                  "text": "03    SUPORTE / IMPRESSÃO",
+                  "role": "muted",
+                  "figma_node": "2:77"
+                }
+              ]
+            },
+            {
+              "id": "exercise-caption",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "exercise-caption-text",
+                  "type": "paragraph",
+                  "text": "A MESMA INTENÇÃO, APLICADA A SUPORTES DIFERENTES.",
+                  "role": "muted",
+                  "figma_node": "2:78"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "method",
+          "type": "section",
+          "spacing": "spacious",
+          "background": "surface",
+          "children": [
+            {
+              "id": "method-intro",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "method-index",
+                  "type": "paragraph",
+                  "text": "04   /   COMO TRABALHAMOS",
+                  "role": "muted",
+                  "figma_node": "2:79"
+                },
+                {
+                  "id": "method-head",
+                  "type": "heading",
+                  "text": "Da pergunta certa\nà entrega certa.",
+                  "level": 2,
+                  "role": "section",
+                  "figma_node": "2:80"
+                }
+              ]
+            },
+            {
+              "id": "method-1",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "method-1-n",
+                  "type": "paragraph",
+                  "text": "01",
+                  "role": "muted",
+                  "figma_node": "2:82"
+                },
+                {
+                  "id": "method-1-h",
+                  "type": "heading",
+                  "text": "Compreender",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:83"
+                }
+              ]
+            },
+            {
+              "id": "method-2",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "method-2-n",
+                  "type": "paragraph",
+                  "text": "02",
+                  "role": "muted",
+                  "figma_node": "2:85"
+                },
+                {
+                  "id": "method-2-h",
+                  "type": "heading",
+                  "text": "Desenhar",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:86"
+                }
+              ]
+            },
+            {
+              "id": "method-3",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "method-3-n",
+                  "type": "paragraph",
+                  "text": "03",
+                  "role": "muted",
+                  "figma_node": "2:88"
+                },
+                {
+                  "id": "method-3-h",
+                  "type": "heading",
+                  "text": "Validar",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:89"
+                }
+              ]
+            },
+            {
+              "id": "method-4",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "method-4-n",
+                  "type": "paragraph",
+                  "text": "04",
+                  "role": "muted",
+                  "figma_node": "2:91"
+                },
+                {
+                  "id": "method-4-h",
+                  "type": "heading",
+                  "text": "Produzir",
+                  "level": 3,
+                  "role": "subsection",
+                  "figma_node": "2:92"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "contact",
+          "type": "section",
+          "spacing": "spacious",
+          "background": "inverse",
+          "children": [
+            {
+              "id": "contact-content",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "contact-index",
+                  "type": "paragraph",
+                  "text": "TEMOS UM PROJETO PARA CONVERSAR?",
+                  "role": "muted",
+                  "figma_node": "2:94"
+                },
+                {
+                  "id": "contact-title",
+                  "type": "heading",
+                  "text": "Vamos dar-lhe forma.",
+                  "level": 2,
+                  "role": "section",
+                  "figma_node": "2:95"
+                },
+                {
+                  "id": "contact-cta",
+                  "type": "button",
+                  "label": "INICIAR CONVERSA ↗",
+                  "url": "https://core-stage.designeo.pt/contactos/",
+                  "style": "primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "footer",
+          "type": "section",
+          "spacing": "none",
+          "background": "inverse",
+          "children": [
+            {
+              "id": "footer-content",
+              "type": "container",
+              "width": "wide",
+              "children": [
+                {
+                  "id": "footer-brand",
+                  "type": "paragraph",
+                  "text": "DESIGNEO     © 2026",
+                  "role": "muted",
+                  "figma_node": "2:97"
+                },
+                {
+                  "id": "footer-place",
+                  "type": "paragraph",
+                  "text": "LEIRIA · PORTUGAL",
+                  "role": "muted",
+                  "figma_node": "2:98"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
