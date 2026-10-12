@@ -1,0 +1,15 @@
+{
+  "renderer": "websign_vnext.renderers.gutenberg.render_site_document",
+  "source_file": "Figma desktop 2:2 mobile 3:2",
+  "source_node_count": 7,
+  "supported_nodes": [
+    "section"
+  ],
+  "semantic_adapter": "additional section className/anchor only, no new block types",
+  "limits": [
+    "SiteDocument v0.1 cannot represent artistic vector graphics or precision art direction",
+    "3- and 4-column arrangements are styled at child-theme level since renderer only accepts 2-col",
+    "editable diagram typography rendered with CSS pseudo-elements and native blocks",
+    "page has scoped child CSS; no modifications to Core/theme.json global"
+  ]
+}
