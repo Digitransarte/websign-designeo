@@ -24,6 +24,20 @@ def apply_render_contract(core: dict[str, bytes]) -> dict[str, bytes]:
     old = ".entry-content a {\n  color: var(--wp--preset--color--on-surface);"
     new = ".entry-content a:not(.wp-block-button__link) {\n  color: var(--wp--preset--color--on-surface);"
     updated[css] = _replace_exact(updated[css], old, new, "link selector")
+    # The full-width Gutenberg groups need their own phone-sized inline gutters.
+    # Scope to WEB-02 sections; retain the existing desktop theme geometry.
+    mobile_gutters = (
+        "\n/* WEB-02 mobile section gutters: native Gutenberg blocks. */\n"
+        "@media (max-width: 600px) {\n"
+        "  .dl-main .dl-section {\n"
+        "    box-sizing: border-box;\n"
+        "    padding-inline: 20px;\n"
+        "  }\n"
+        "}\n"
+    )
+    if b"WEB-02 mobile section gutters" in updated[css]:
+        raise ValueError("Mobile section gutter contract already present")
+    updated[css] += mobile_gutters.encode("utf-8")
 
     for location in ("header", "footer"):
         key = ROOT + f"parts/{location}.html"

@@ -16,6 +16,11 @@ class RenderingContractTests(unittest.TestCase):
         output = apply_render_contract(core)
         self.assertIn(b".entry-content a:not(.wp-block-button__link)",
                       output[ROOT + "assets/css/global.css"])
+        css_output = output[ROOT + "assets/css/global.css"].decode("utf-8")
+        self.assertIn("@media (max-width: 600px)", css_output)
+        self.assertIn(".dl-main .dl-section", css_output)
+        self.assertIn("padding-inline: 20px;", css_output)
+        self.assertEqual(css_output.count("WEB-02 mobile section gutters"), 1)
         for part in ("header", "footer"):
             data = output[ROOT + f"parts/{part}.html"]
             self.assertIn(b"<!-- /wp:navigation -->", data)
